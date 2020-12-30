@@ -56,7 +56,8 @@ jobs:
 
           # Run Elasticsearch and wait for its availability
 
-          docker-compose up -d elasticsearch
+          make start-services
+          #docker-compose up -d elasticsearch
           source .github/workflows/scripts/lib/testing.sh
           poll_ready "$(container_id elasticsearch)" "http://$(service_ip elasticsearch):9200/" -u 'elastic:changeme'
 
