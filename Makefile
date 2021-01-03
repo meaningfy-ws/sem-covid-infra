@@ -1,5 +1,7 @@
 build-volumes:
 	@ docker volume create jupyter-notebook
+	@ docker volume create mlflow_dbdata
+	@ docker volume create mlflow_artifacts
 
 start-services: build-volumes
 	@ echo "$(BUILD_PRINT)Starting the Docker compose services"
