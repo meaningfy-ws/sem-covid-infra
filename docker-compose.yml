@@ -1,86 +1,121 @@
 version: '3.2'
 
 services:
-  elasticsearch:
-    build:
-      context: elasticsearch/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
-        target: /usr/share/elasticsearch/config/elasticsearch.yml
-        read_only: true
-      - type: volume
-        source: elasticsearch
-        target: /usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9300:9300"
+#  elasticsearch:
+#    build:
+#      context: elasticsearch/
+#      args:
+#        ELK_VERSION: $ELK_VERSION
+#    volumes:
+#      - type: bind
+#        source: ./elasticsearch/config/elasticsearch.yml
+#        target: /usr/share/elasticsearch/config/elasticsearch.yml
+#        read_only: true
+#      - type: volume
+#        source: elasticsearch
+#        target: /usr/share/elasticsearch/data
+#    ports:
+#      - "9200:9200"
+#      - "9300:9300"
+#    environment:
+#      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+#      ELASTIC_PASSWORD: changeme
+#      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+#      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+#      discovery.type: single-node
+#    networks:
+#      - elk
+#
+#  logstash:
+#    build:
+#      context: logstash/
+#      args:
+#        ELK_VERSION: $ELK_VERSION
+#    volumes:
+#      - type: bind
+#        source: ./logstash/config/logstash.yml
+#        target: /usr/share/logstash/config/logstash.yml
+#        read_only: true
+#      - type: bind
+#        source: ./logstash/pipeline
+#        target: /usr/share/logstash/pipeline
+#        read_only: true
+#    ports:
+#      - "5044:5044"
+#      - "5000:5000/tcp"
+#      - "5000:5000/udp"
+#      - "9600:9600"
+#    environment:
+#      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+#    networks:
+#      - elk
+#    depends_on:
+#      - elasticsearch
+#
+#  kibana:
+#    build:
+#      context: kibana/
+#      args:
+#        ELK_VERSION: $ELK_VERSION
+#    volumes:
+#      - type: bind
+#        source: ./kibana/config/kibana.yml
+#        target: /usr/share/kibana/config/kibana.yml
+#        read_only: true
+#    ports:
+#      - "5601:5601"
+#    networks:
+#      - elk
+#    depends_on:
+#      - elasticsearch
+#
+#  notebook:
+#    image: jupyter/datascience-notebook
+#    container_name: jupyter-notebook-srv
+#    command: "start-notebook.sh \
+#            --NotebookApp.password=${JUPYTER_PASSWORD} \
+#            --NotebookApp.token=${JUPYTER_TOKEN}"
+#    volumes:
+#      - work:/home/jovyan/work
+#    ports:
+#      - ${JUPYTER_PORT}:8888
+#    networks:
+#      - elk
+
+  mlflow_db:
+    restart: always
+    image: mysql:latest
+    container_name: mlflow_db
+    expose:
+      - "3306"
     environment:
-      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-      ELASTIC_PASSWORD: changeme
-      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
-      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
-      discovery.type: single-node
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mlflow_dbdata:/var/lib/mysql
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
     networks:
       - elk
 
-  logstash:
+  mlflow_tracker:
+    container_name: mlflow_tracker
+    image: mlflow_tracker
     build:
-      context: logstash/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: bind
-        source: ./logstash/config/logstash.yml
-        target: /usr/share/logstash/config/logstash.yml
-        read_only: true
-      - type: bind
-        source: ./logstash/pipeline
-        target: /usr/share/logstash/pipeline
-        read_only: true
+      context: ./mlflow
+      dockerfile: Dockerfile
     ports:
-      - "5044:5044"
-      - "5000:5000/tcp"
-      - "5000:5000/udp"
-      - "9600:9600"
-    environment:
-      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+      - ${MLFLOW_PORT}:${MLFLOW_PORT}
+    volumes:
+      - mlflow_artifacts:/app/mlruns
     networks:
       - elk
+#    entrypoint: ./wait-for-it.sh mlflow_db:3306 -t 90 -- mlflow server --backend-store-uri mysql+pymysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mlflow_db:3306/${MYSQL_DATABASE} --default-artifact-root ./artifacts --host 0.0.0.0 --port ${MLFLOW_PORT}
+    entrypoint: ./wait-for-it.sh mlflow_db:3306 -t 90 -- mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT}
     depends_on:
-      - elasticsearch
-
-  kibana:
-    build:
-      context: kibana/
-      args:
-        ELK_VERSION: $ELK_VERSION
-    volumes:
-      - type: bind
-        source: ./kibana/config/kibana.yml
-        target: /usr/share/kibana/config/kibana.yml
-        read_only: true
-    ports:
-      - "5601:5601"
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
-
-  notebook:
-    image: jupyter/datascience-notebook
-    container_name: jupyter-notebook-srv
-    command: "start-notebook.sh \
-            --NotebookApp.password=${JYPYTER_PASSWORD} \
-            --NotebookApp.token=${JYPYTER_TOKEN}"
-    volumes:
-      - work:/home/jovyan/work
-    ports:
-      - ${JYPYTER_PORT}:8888
-    networks:
-      - elk
+      - mlflow_db
 
 networks:
   elk:
@@ -90,5 +125,11 @@ volumes:
   work:
     external:
       name: jupyter-notebook
+  mlflow_dbdata:
+    external:
+      name: mlflow_dbdata
+  mlflow_artifacts:
+    external:
+      name: mlflow_artifacts
   elasticsearch:
 

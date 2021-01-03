@@ -1,0 +1,15 @@
+FROM python:3.8.2-slim
+
+
+ADD . /app
+WORKDIR /app
+RUN chmod -R 777 /app
+
+COPY wait-for-it.sh wait-for-it.sh
+RUN chmod +x wait-for-it.sh
+
+RUN pip install --upgrade pip
+RUN pip install PyMySQL mlflow[extras]
+#RUN pip install psycopg2-binary
+
+#ENTRYPOINT ["mlflow", "server"]
