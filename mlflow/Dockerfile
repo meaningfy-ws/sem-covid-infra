@@ -13,5 +13,6 @@ RUN chmod +x wait-for-it.sh
 
 
 RUN pip install --upgrade pip
-RUN pip install PyMySQL mlflow[extras]
-RUN pip install psycopg2-binary
+#RUN pip install PyMySQL mlflow[extras]
+#RUN pip install psycopg2-binary
+RUN pip install mlflow[extras]
