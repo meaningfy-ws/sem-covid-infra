@@ -43,27 +43,27 @@ jobs:
       #                                                      #
       ########################################################
 
-#      - name: Set password of every built-in user to 'testpasswd'
-#        run: |
-#
-#          # Change password of 'elastic' user from 'changeme' to 'testpasswd' in config files
-#
-#          sed -i -e 's/\(xpack.monitoring.elasticsearch.username:\) elastic/\1 logstash_system/g' -e 's/\(xpack.monitoring.elasticsearch.password:\) changeme/\1 testpasswd/g' logstash/config/logstash.yml
-#          sed -i 's/\(password =>\) "changeme"/\1 "testpasswd"/g' logstash/pipeline/logstash.conf
-#          sed -i -e 's/\(elasticsearch.username:\) elastic/\1 kibana_system/g' -e 's/\(elasticsearch.password:\) changeme/\1 testpasswd/g' kibana/config/kibana.yml
-#          sed -i -e 's/\(elasticsearch.password:\) changeme/\1 testpasswd/g' -e 's/\(secret_management.encryption_keys:\)/\1 [test-encrypt]/g' extensions/enterprise-search/config/enterprise-search.yml
-#          sed -i 's/\(password:\) changeme/\1 testpasswd/g' extensions/apm-server/config/apm-server.yml
-#
-#          # Run Elasticsearch and wait for its availability
-#
-#          make start-services
-#          #docker-compose up -d elasticsearch
-#          source .github/workflows/scripts/lib/testing.sh
-#          poll_ready "$(container_id elasticsearch)" "http://$(service_ip elasticsearch):9200/" -u 'elastic:changeme'
-#
-#          # Set passwords
-#
-#          .github/workflows/scripts/elasticsearch-setup-passwords.exp
+      - name: Set password of every built-in user to 'testpasswd'
+        run: |
+
+          # Change password of 'elastic' user from 'changeme' to 'testpasswd' in config files
+
+          sed -i -e 's/\(xpack.monitoring.elasticsearch.username:\) elastic/\1 logstash_system/g' -e 's/\(xpack.monitoring.elasticsearch.password:\) changeme/\1 testpasswd/g' logstash/config/logstash.yml
+          sed -i 's/\(password =>\) "changeme"/\1 "testpasswd"/g' logstash/pipeline/logstash.conf
+          sed -i -e 's/\(elasticsearch.username:\) elastic/\1 kibana_system/g' -e 's/\(elasticsearch.password:\) changeme/\1 testpasswd/g' kibana/config/kibana.yml
+          sed -i -e 's/\(elasticsearch.password:\) changeme/\1 testpasswd/g' -e 's/\(secret_management.encryption_keys:\)/\1 [test-encrypt]/g' extensions/enterprise-search/config/enterprise-search.yml
+          sed -i 's/\(password:\) changeme/\1 testpasswd/g' extensions/apm-server/config/apm-server.yml
+
+          # Run Elasticsearch and wait for its availability
+
+          # make start-services
+          docker-compose up -d elasticsearch
+          source .github/workflows/scripts/lib/testing.sh
+          poll_ready "$(container_id elasticsearch)" "http://$(service_ip elasticsearch):9200/" -u 'elastic:changeme'
+
+          # Set passwords
+
+          .github/workflows/scripts/elasticsearch-setup-passwords.exp
 
       ##########################################################
       #                                                        #
@@ -72,7 +72,8 @@ jobs:
       ##########################################################
 
       - name:  Run the stack
-        run: docker-compose up -d
+#        run: docker-compose up -d
+        run: make start-services
 
       - name: Execute core test suite
         run: .github/workflows/scripts/run-tests-core.sh
