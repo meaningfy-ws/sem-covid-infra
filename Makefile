@@ -8,8 +8,8 @@ start-services: build-volumes
 	@ docker volume create --name=jupyter-notebook
 	@ docker volume create --name=mlflow_artifacts
 # 	@ docker volume create --name=postgres_store
-	@ docker-compose --file docker-compose.yml  --env-file .env up -d
-	@# docker logs --tail 3 jupyter-notebook-srv
+	@ docker-compose --file docker-compose.yml --env-file .env up -d
+# 	@ docker logs --tail 3 jupyter-notebook-srv
 
 stop-services:
 	@ echo "$(BUILD_PRINT)Stopping the Docker compose services"
