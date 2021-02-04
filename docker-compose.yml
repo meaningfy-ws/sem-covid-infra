@@ -96,7 +96,7 @@ services:
 #    networks:
 #      - elk
 
-  ml/home/laur/work/testbed/docker-airflowflow_tracker:
+   mlflow_tracker:
     container_name: mlflow_tracker
     image: mlflow_tracker
     build:
