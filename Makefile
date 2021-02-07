@@ -14,3 +14,7 @@ start-services: build-volumes
 stop-services:
 	@ echo "$(BUILD_PRINT)Stopping the Docker compose services"
 	@ docker-compose --file docker-compose.yml --env-file .env down
+
+
+ start-airflow2:
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env up -d
