@@ -96,7 +96,7 @@ services:
 #    networks:
 #      - elk
 
-  mlflow_tracker:
+   mlflow_tracker:
     container_name: mlflow_tracker
     image: mlflow_tracker
     build:
@@ -109,6 +109,57 @@ services:
     entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT}
     networks:
       - elk
+
+  apache_tika:
+    container_name: apache_tika
+    image: apache/tika
+    ports:
+      - 9998:9998
+    networks:
+      - elk
+
+
+    postgres:
+        image: postgres:9.6
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        networks:
+          - elk
+
+    webserver:
+        build:
+            context: ./airflow
+            dockerfile: Dockerfile
+        restart: always
+        depends_on:
+            - postgres
+        environment:
+            - LOAD_EX=n
+            - EXECUTOR=Local
+        logging:
+            options:
+                max-size: 10m
+                max-file: "3"
+        volumes:
+            - ./airflow/dags:/usr/local/airflow/dags
+            # - ./plugins:/usr/local/airflow/plugins
+        ports:
+            - "7080:8080"
+        command: webserver
+        healthcheck:
+            test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+            interval: 30s
+            timeout: 30s
+            retries: 3
+        networks:
+          - elk
+
 networks:
   elk:
     driver: bridge
