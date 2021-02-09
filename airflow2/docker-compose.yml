@@ -48,12 +48,12 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
   volumes:
-#    - ./dags:/opt/airflow/dags
+    - ./dags:/opt/airflow/dags
 #    - ./logs:/opt/airflow/logs
 #    - ./plugins:/opt/airflow/plugins
-    - airflow-dags-volume:/opt/airflow/dags
+#    - airflow-dags-volume:/opt/airflow/dags
     - airflow-logs-volume:/opt/airflow/logs
     - airflow-plugins-volume:/opt/airflow/plugins
   user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
