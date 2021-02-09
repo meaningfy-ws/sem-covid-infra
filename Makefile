@@ -16,11 +16,14 @@ stop-services:
 	@ docker-compose --file docker-compose.yml --env-file .env down
 
 
-start-airflow2:
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
+ start-airflow2:
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env up -d
 
-start-mlflow:
-	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env up -d
+ stop-airflow2:
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env down
 
-stop-mlflow:
-	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down
+ start-minio:
+	@ docker-compose --file docker-compose.yml --env-file .env up -d minio-s3
+
+ stop-minio:
+	@ docker-compose --file docker-compose.yml --env-file .env down minio-s3
