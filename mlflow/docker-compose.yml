@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  sftp:
+    image: atmoz/sftp
+    environment:
+      - SFTP_PORT=${SFTP_PORT:-2244}
+      - SFTP_USER=${SFTP_USER:?err}
+      - SFTP_PASSWORD=${SFTP_PASSWORD:?err}
+      - SFTP_USER_ID=${SFTP_USER_ID:-1001}
+    volumes:
+      - ./upload:/home/${SFTP_USER}
+    ports:
+      - ${SFTP_PORT}:22
+    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
+    networks:
+      - elk
+
+  minio-s3:
+    image: minio/minio:latest
+    container_name: minio-s3
+    ports:
+      - 9000:9000
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    command:
+      server /data
+    networks:
+      - elk
+    volumes:
+      - s3-disk:/data
+
+
+  postgresql:
+    image: postgres:10.15
+    container_name: postgresql
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${MLFLOW_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MLFLOW_POSTGRES_PASSWORD}
+      POSTGRES_DB: mlflow-db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    hostname: postgresql
+    restart: always
+    networks:
+      - elk
+
+
+  waitfordb:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - postgresql
+      - sftp
+    command: postgresql:5432
+
+#  mlflow_tracker:
+#    container_name: mlflow_tracker
+#    image: mlflow_tracker
+#    build:
+#      context: ./mlflow
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - postgresql
+#      - waitfordb
+#      - sftp
+#    environment:
+#      DB_URI: postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db
+#    ports:
+#      - ${MLFLOW_PORT}:${MLFLOW_PORT}
+#    volumes:
+#      - mlflow_artifacts:/usr/app
+#    entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT}
+#    networks:
+#      - elk
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  mlflow_artifacts:
+  postgres_store:
+  elasticsearch:
+  sftp_volume:
+  s3-disk:
+

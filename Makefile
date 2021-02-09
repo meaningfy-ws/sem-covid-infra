@@ -16,5 +16,11 @@ stop-services:
 	@ docker-compose --file docker-compose.yml --env-file .env down
 
 
- start-airflow2:
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env up -d
+start-airflow2:
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
+
+start-mlflow:
+	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env up -d
+
+stop-mlflow:
+	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down
