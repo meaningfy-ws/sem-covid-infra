@@ -198,8 +198,8 @@ networks:
 
 volumes:
   work:
-#    external:
-#      name: jupyter-notebook
+    external:
+      name: jupyter-notebook
   mlflow_artifacts:
     external:
       name: mlflow_artifacts
