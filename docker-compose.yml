@@ -119,46 +119,61 @@ services:
       - elk
 
 
-    postgres:
-        image: postgres:9.6
-        environment:
-            - POSTGRES_USER=airflow
-            - POSTGRES_PASSWORD=airflow
-            - POSTGRES_DB=airflow
-        logging:
-            options:
-                max-size: 10m
-                max-file: "3"
-        networks:
-          - elk
+  postgres:
+      image: postgres:9.6
+      environment:
+          - POSTGRES_USER=airflow
+          - POSTGRES_PASSWORD=airflow
+          - POSTGRES_DB=airflow
+      logging:
+          options:
+              max-size: 10m
+              max-file: "3"
+      networks:
+        - elk
 
-    webserver:
-        build:
-            context: ./airflow
-            dockerfile: Dockerfile
-        restart: always
-        depends_on:
-            - postgres
-        environment:
-            - LOAD_EX=n
-            - EXECUTOR=Local
-        logging:
-            options:
-                max-size: 10m
-                max-file: "3"
-        volumes:
-            - ./airflow/dags:/usr/local/airflow/dags
-            # - ./plugins:/usr/local/airflow/plugins
-        ports:
-            - "7080:8080"
-        command: webserver
-        healthcheck:
-            test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
-            interval: 30s
-            timeout: 30s
-            retries: 3
-        networks:
-          - elk
+  airflow-server:
+    build:
+        context: ./airflow
+        dockerfile: Dockerfile
+    restart: always
+    depends_on:
+        - postgres
+    environment:
+        - LOAD_EX=n
+        - EXECUTOR=Local
+    logging:
+        options:
+            max-size: 10m
+            max-file: "3"
+    volumes:
+        - ./airflow/dags:/usr/local/airflow/dags
+        # - ./plugins:/usr/local/airflow/plugins
+    ports:
+        - "7080:8080"
+    command: webserver
+    healthcheck:
+        test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+        interval: 30s
+        timeout: 30s
+        retries: 3
+    networks:
+      - elk
+
+  minio-s3:
+    image: minio/minio:latest
+    container_name: minio-s3
+    ports:
+      - 9000:9000
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    command:
+      server /data
+    networks:
+      - elk
+    volumes:
+      - s3-disk:/data
 
 networks:
   elk:
@@ -166,8 +181,8 @@ networks:
 
 volumes:
   work:
-    external:
-      name: jupyter-notebook
+#    external:
+#      name: jupyter-notebook
   mlflow_artifacts:
     external:
       name: mlflow_artifacts
@@ -175,4 +190,5 @@ volumes:
 #    external:
 #      name: postgres_store
   elasticsearch:
+  s3-disk:
 
