@@ -18,3 +18,12 @@ stop-services:
 
  start-airflow2:
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env up -d
+
+ stop-airflow2:
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env down
+
+ start-minio:
+	@ docker-compose --file docker-compose.yml --env-file .env up -d minio-s3
+
+ stop-minio:
+	@ docker-compose --file docker-compose.yml --env-file .env down minio-s3
