@@ -95,7 +95,8 @@ services:
 #      - ./upload:/home/${SFTP_USER}
     ports:
       - ${SFTP_PORT}:22
-    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
+#    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
+    command: ${SFTP_USER}:${SFTP_PASSWORD}
     networks:
       - elk
 
