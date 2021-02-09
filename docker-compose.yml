@@ -181,6 +181,7 @@ services:
   minio-s3:
     image: minio/minio:latest
     container_name: minio-s3
+    hostname: srv.meaningfy.ws
     ports:
       - 9000:9000
     environment:
