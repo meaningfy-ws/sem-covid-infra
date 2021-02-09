@@ -3,22 +3,24 @@ version: '3'
 services:
   sftp:
     image: atmoz/sftp
-    environment:
-      - SFTP_PORT=${SFTP_PORT:-2244}
-      - SFTP_USER=${SFTP_USER:?err}
-      - SFTP_PASSWORD=${SFTP_PASSWORD:?err}
-      - SFTP_USER_ID=${SFTP_USER_ID:-1001}
+    hostname: sftp
+#    environment:
+#      - MLFLOW_SFTP_PORT=${MLFLOW_SFTP_PORT:-2244}
+#      - MLFLOW_SFTP_USER=${MLFLOW_SFTP_USER:?err}
+#      - MLFLOW_SFTP_PASSWORD=${MLFLOW_SFTP_PASSWORD:?err}
+#      - MLFLOW_SFTP_USER_ID=${MLFLOW_SFTP_USER_ID:-1001}
     volumes:
-      - ./upload:/home/${SFTP_USER}
+      - ./upload:/home/${MLFLOW_SFTP_USER}
     ports:
-      - ${SFTP_PORT}:22
-    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
-    networks:
-      - elk
+      - ${MLFLOW_SFTP_PORT}:22
+    command: ${MLFLOW_SFTP_USER}:${MLFLOW_SFTP_PASSWORD}:::upload
+#    networks:
+#      - elk
 
   minio-s3:
     image: minio/minio:latest
     container_name: minio-s3
+    hostname: minio-s3
     ports:
       - 9000:9000
     environment:
@@ -26,8 +28,8 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
     command:
       server /data
-    networks:
-      - elk
+#    networks:
+#      - elk
     volumes:
       - s3-disk:/data
 
@@ -44,8 +46,8 @@ services:
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     hostname: postgresql
     restart: always
-    networks:
-      - elk
+#    networks:
+#      - elk
 
 
   waitfordb:
@@ -55,34 +57,96 @@ services:
       - sftp
     command: postgresql:5432
 
-#  mlflow_tracker:
-#    container_name: mlflow_tracker
-#    image: mlflow_tracker
-#    build:
-#      context: ./mlflow
-#      dockerfile: Dockerfile
-#    depends_on:
-#      - postgresql
-#      - waitfordb
-#      - sftp
-#    environment:
+  mlflow_tracker:
+    container_name: mlflow_tracker
+    image: mlflow_tracker
+    hostname: mlflow_tracker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgresql
+      - waitfordb
+      - sftp
+    environment:
 #      DB_URI: postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db
-#    ports:
-#      - ${MLFLOW_PORT}:${MLFLOW_PORT}
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
+#      MLFLOW_PORT: ${MLFLOW_PORT}
+#      MLFLOW_S3_BUCKET_NAME: ${MLFLOW_S3_BUCKET_NAME:-mlflow}
+      AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+      AWS_DEFAULT_REGION: ${MINIO_REGION}
+      VIRTUAL_HOST: ${MLFLOW_HOST}
+      VIRTUAL_PORT: ${MLFLOW_PORT}
+      LETSENCRYPT_HOST: ${MLFLOW_HOST}
+      LETSENCRYPT_EMAIL: example@gmail.com
+    ports:
+      - ${MLFLOW_PORT}:${MLFLOW_PORT}
+#    expose:
+#      - ${MLFLOW_PORT}
+#      - 443
 #    volumes:
 #      - mlflow_artifacts:/usr/app
 #    entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT}
+#    entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT} --backend-store-uri postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db --default-artifact-root s3://${MLFLOW_S3_BUCKET_NAME}/
+    entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT} --backend-store-uri postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db --default-artifact-root sftp://${MLFLOW_SFTP_USER}:${MLFLOW_SFTP_PASSWORD}@sftp:${MLFLOW_SFTP_PORT}
 #    networks:
 #      - elk
 
-networks:
-  elk:
-    driver: bridge
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./${HOST}:/etc/nginx/htpasswd/${HOST}
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - vhost:/etc/nginx/vhost.d
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - conf:/etc/nginx/conf.d
+    environment:
+      DEFAULT_HOST: ${HOST}
+      DHPARAM_GENERATION: "false"
+      HTTPS_METHOD: noredirect
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+
+
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-lets-encrypt
+    restart: always
+    depends_on:
+      - nginx-proxy
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - certs:/etc/nginx/certs:rw
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      NGINX_PROXY_CONTAINER: nginx-proxy
+
+#networks:
+#  elk:
+#    driver: bridge
+#  frontend:
+#      driver: bridge
+#  backend:
+#      driver: bridge
 
 volumes:
-  mlflow_artifacts:
+#  mlflow_artifacts:
   postgres_store:
   elasticsearch:
-  sftp_volume:
   s3-disk:
 
+  certs:
+  html:
+  vhost:
+  dhparam:
+  conf:
