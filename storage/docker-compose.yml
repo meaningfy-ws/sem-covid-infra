@@ -4,7 +4,7 @@ services:
   sftp:
     image: atmoz/sftp
     volumes:
-      - work:/home/${SFTP_USER}
+      - jupyter-notebook:/home/${SFTP_USER}
     ports:
       - ${SFTP_PORT}:22
 #    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
@@ -23,9 +23,7 @@ services:
       - s3-disk:/data
 
 volumes:
-  work:
-    external:
-      name: jupyter-notebook
+  jupyter-notebook:
   s3-disk:
 
 
