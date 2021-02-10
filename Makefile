@@ -1,8 +1,8 @@
 build-volumes:
+	@ echo "$(BUILD_PRINT)Creating the necessary volumes and folders and setting special rights"
 	@ docker volume create jupyter-notebook
-	@ mkdir -p ./airflow2/logs
-	@ mkdir -p ./airflow2/plugins
-	@ mkdir -p ./airflow2/dags
+	@ sudo mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
+	@ sudo chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 
 start-elk:
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
