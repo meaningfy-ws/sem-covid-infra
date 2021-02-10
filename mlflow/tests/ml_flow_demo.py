@@ -3,7 +3,7 @@ from random import random, randint
 
 from mlflow import mlflow, log_metric, log_param, log_artifacts
 
-MLFLOW_TRACKING_URI = 'http://0.0.0.0:8989'
+MLFLOW_TRACKING_URI = 'http://srv.meaningfy.ws:8989'
 
 if __name__ == "__main__":
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
