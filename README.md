@@ -31,6 +31,7 @@ Stopping all the services can be done with
 ```shell script
 make stop-services-all
 ```
+
 ##### ELK services
 ```shell script
 make start-elk
@@ -38,6 +39,13 @@ make start-elk
 ```shell script
 make stop-elk
 ```
+The stack is pre-configured with the following **privileged** bootstrap user:
+
+* user: *elastic*
+* password: *changeme*
+
+The ELK users and password MUST be changed. Please refer to [THIS page](https://github.com/deviantony/docker-elk#initial-setup) for additional information on how to increase the ELK security. 
+
 ##### Jupyter Notebook services
 ```shell script
 make start-notebook
@@ -75,6 +83,9 @@ make start-airflow2
 make stop-airflow2
 ```
 
+The Airflow2 uses three bind mounts instead of volumes in order to facilitate managements of DAGs. Make sure that the three folders have R/W access for all users (this it probably bad idea, but it works for now). In the future recur to using Docker volumes.
+ 
+This setup of Airflow uses Celery workers which can be monitored using Flower service (by default accessible on :5555 port). 
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
