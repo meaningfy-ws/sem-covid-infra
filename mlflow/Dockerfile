@@ -17,9 +17,11 @@ RUN apt-get update && apt-get install -y \
 RUN pip install --upgrade pip
 #RUN pip install psycopg2-binary mlflow mlflow[extras] boto3
 RUN pip install mlflow boto3 psycopg2-binary pysftp
+
+
+
 #
 #COPY ./start.sh ./start.sh
 #RUN chmod +x ./start.sh
-
-EXPOSE 80
-EXPOSE 443
+#EXPOSE 80
+#EXPOSE 443

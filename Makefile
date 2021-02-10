@@ -27,3 +27,9 @@ stop-services:
 
  stop-minio:
 	@ docker-compose --file docker-compose.yml --env-file .env down minio-s3
+
+start-mlflow:
+	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env up -d
+
+stop-mlflow:
+	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down

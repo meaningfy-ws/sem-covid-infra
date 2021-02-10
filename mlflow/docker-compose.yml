@@ -4,7 +4,7 @@ services:
   minio-s3:
     image: minio/minio:latest
     container_name: minio-s3
-    hostname: srv.meaningfy.ws
+    hostname: localhost
     ports:
       - 9000:9000
     environment:
@@ -17,10 +17,10 @@ services:
     volumes:
       - s3-disk:/data
 
-
   postgresql:
     image: postgres:10.15
     container_name: postgresql
+    hostname: postgresql
     ports:
       - 5432:5432
     environment:
@@ -28,42 +28,35 @@ services:
       POSTGRES_PASSWORD: ${MLFLOW_POSTGRES_PASSWORD}
       POSTGRES_DB: mlflow-db
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
-    hostname: postgresql
     restart: always
+    volumes:
+      - postgres_store:/var/lib/postgresql/data
     networks:
       - elk
-
 
   waitfordb:
     image: dadarek/wait-for-dependencies
     depends_on:
       - postgresql
-      - sftp
+      - minio-s3
     command: postgresql:5432
 
   mlflow_tracker:
     container_name: mlflow_tracker
     image: mlflow_tracker
-    hostname: srv.meaningfy.ws
+#    hostname: localhost
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - postgresql
       - waitfordb
-      - sftp
+      - minio-s3
     environment:
-#      DB_URI: postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db
-      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
-#      MLFLOW_PORT: ${MLFLOW_PORT}
-#      MLFLOW_S3_BUCKET_NAME: ${MLFLOW_S3_BUCKET_NAME:-mlflow}
-      AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
-      AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
-      AWS_DEFAULT_REGION: ${MINIO_REGION}
-      VIRTUAL_HOST: ${MLFLOW_HOST}
-      VIRTUAL_PORT: ${MLFLOW_PORT}
-      LETSENCRYPT_HOST: ${MLFLOW_HOST}
-      LETSENCRYPT_EMAIL: example@gmail.com
+      - MLFLOW_S3_ENDPOINT_URL=${MLFLOW_S3_ENDPOINT_URL}
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
+      - AWS_DEFAULT_REGION=${MINIO_REGION}
     ports:
       - ${MLFLOW_PORT}:${MLFLOW_PORT}
 #    expose:
@@ -73,6 +66,7 @@ services:
 #      - mlflow_artifacts:/usr/app
 #    entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT}
     entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT} --backend-store-uri postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db --default-artifact-root s3://${MLFLOW_S3_BUCKET_NAME}/
+
 #    entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT} --backend-store-uri postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db --default-artifact-root sftp://${MLFLOW_SFTP_USER}:${MLFLOW_SFTP_PASSWORD}@sftp:${MLFLOW_SFTP_PORT}
     networks:
       - elk
@@ -115,9 +109,9 @@ services:
 #    environment:
 #      NGINX_PROXY_CONTAINER: nginx-proxy
 
-#networks:
-#  elk:
-#    driver: bridge
+networks:
+  elk:
+    driver: bridge
 #  frontend:
 #      driver: bridge
 #  backend:
