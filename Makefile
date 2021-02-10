@@ -16,7 +16,7 @@ start-storage:
 	@ echo "$(BUILD_PRINT)Starting the File Storage services"
 	@ docker-compose --file ./storage/docker-compose.yml --env-file ../.env up -d
 
-stop-storage:
+stop-storage: start-storage
 	@ echo "$(BUILD_PRINT)Stopping the File Storage services"
 	@ docker-compose --file ./storage/docker-compose.yml --env-file ../.env down
 
@@ -28,7 +28,7 @@ stop-mlflow:
 	@ echo "$(BUILD_PRINT)Stopping the MLFlow services"
 	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down
 
-start-airflow2:
+start-airflow2: build-volumes
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
 	@ echo "$(BUILD_PRINT)Warning: the shared folders need R/W permissions"
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
@@ -36,7 +36,6 @@ start-airflow2:
 stop-airflow2:
 	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
-
 
 start-services-all: | build-volumes start-storage start-elk start-mlflow start-airflow2
 
