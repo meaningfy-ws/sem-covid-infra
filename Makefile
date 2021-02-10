@@ -1,18 +1,15 @@
 build-volumes:
 	@ docker volume create jupyter-notebook
-#	@ docker volume create mlflow_dbdata
-#	@ docker volume create mlflow_artifacts
+	@ mkdir ./airflow2/logs
+	@ mkdir ./airflow2/plugins
+	@ mkdir ./airflow2/dags
 
-start-services: build-volumes
-	@ echo "$(BUILD_PRINT)Starting the Docker compose services"
-#	@ docker volume create --name=jupyter-notebook
-#	@ docker volume create --name=mlflow_artifacts
-# 	@ docker volume create --name=postgres_store
+start-elk: build-volumes
+	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
 	@ docker-compose --file docker-compose.yml --env-file .env up -d
-# 	@ docker logs --tail 3 jupyter-notebook-srv
 
-stop-services:
-	@ echo "$(BUILD_PRINT)Stopping the Docker compose services"
+stop-elk:
+	@ echo "$(BUILD_PRINT)Stopping the ELK and other services"
 	@ docker-compose --file docker-compose.yml --env-file .env down
 
 start-storage:
@@ -34,12 +31,15 @@ stop-mlflow:
 start-airflow2:
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
 	@ echo "$(BUILD_PRINT)Warning: the shared folders need R/W permissions"
-	@ mkdir ./airflow2/logs
-	@ mkdir ./airflow2/plugins
-	@ mkdir ./airflow2/dags
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
 
 stop-airflow2:
 	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
 
+
+start-services-all: | build-volumes start-storage start-elk start-mlflow start-airflow2
+
+stop-services-all: | build-volumes start-storage start-elk start-mlflow start-airflow2
+
+all: start-services-all
