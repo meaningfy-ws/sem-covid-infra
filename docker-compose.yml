@@ -101,19 +101,6 @@ services:
       - elk
 
 
-#  postgres:
-#    build:
-#      context: ./postgres-docker
-#    restart: always
-#    environment:
-#        POSTGRES_PASSWORD: 'admin'
-#    ports:
-#      - "5433:5432"
-#    volumes:
-#      - postgres_store:/var/lib/postgresql/data
-#    networks:
-#      - elk
-
   mlflow_tracker:
     container_name: mlflow_tracker
     image: mlflow_tracker
