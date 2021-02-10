@@ -1,14 +1,7 @@
 version: '3.2'
 
 services:
-  sftp:
-    image: atmoz/sftp
-    volumes:
-      - jupyter-notebook:/home/${SFTP_USER}
-    ports:
-      - ${SFTP_PORT}:22
-#    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
-    command: ${SFTP_USER}:${SFTP_PASSWORD}
+
 
   minio-s3:
     image: minio/minio:latest
@@ -23,7 +16,9 @@ services:
       - s3-disk:/data
 
 volumes:
-  jupyter-notebook:
+  jupyter-notebook-work:
+    external:
+      name: jupyter-notebook
   s3-disk:
 
 

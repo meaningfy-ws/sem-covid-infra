@@ -69,18 +69,6 @@ services:
     depends_on:
       - elasticsearch
 
-  notebook:
-    image: jupyter/datascience-notebook
-    command: "start-notebook.sh \
-            --NotebookApp.password=${JUPYTER_PASSWORD} \
-            --NotebookApp.token=${JUPYTER_TOKEN}"
-    volumes:
-      - jupyter-notebook:/home/jovyan/work
-    ports:
-      - ${JUPYTER_PORT}:8888
-    networks:
-      - elk
-
   apache_tika:
     image: apache/tika
     ports:
@@ -93,6 +81,5 @@ networks:
     driver: bridge
 
 volumes:
-  jupyter-notebook:
   elasticsearch:
 

@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - jupyter-notebook-work:/home/${SFTP_USER}
+    ports:
+      - ${SFTP_PORT}:22
+    #    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
+    command: ${SFTP_USER}:${SFTP_PASSWORD}
+
+  notebook:
+    image: jupyter/datascience-notebook
+    command: "start-notebook.sh \
+            --NotebookApp.password=${JUPYTER_PASSWORD} \
+            --NotebookApp.token=${JUPYTER_TOKEN}"
+    volumes:
+      - jupyter-notebook-work:/home/jovyan/work
+    ports:
+      - ${JUPYTER_PORT}:8888
+
+volumes:
+  jupyter-notebook-work:
+    external:
+      name: jupyter-notebook
+
+
