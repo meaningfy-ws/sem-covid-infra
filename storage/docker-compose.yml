@@ -1,0 +1,24 @@
+version: '3.2'
+
+services:
+
+
+  minio-s3:
+    image: minio/minio:latest
+    ports:
+      - ${MINIO_PORT}:9000
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    command:
+      server /data
+    volumes:
+      - s3-disk:/data
+
+volumes:
+  jupyter-notebook-work:
+    external:
+      name: jupyter-notebook
+  s3-disk:
+
+
