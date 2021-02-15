@@ -74,18 +74,10 @@ services:
     depends_on:
       - elasticsearch
 
-  apache_tika:
-    container_name: apache-tika
-    image: apache/tika
-    ports:
-      - 9998:9998
-    networks:
-      - elk
-
-networks:
-  elk:
-    external:
-          name: elk
+#networks:
+#  elk:
+#    external:
+#          name: elk
 
 volumes:
   elasticsearch:
