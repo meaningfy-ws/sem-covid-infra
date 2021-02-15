@@ -61,7 +61,13 @@ stop-vault:
 	@ echo "$(BUILD_PRINT)Stopping the Vault services"
 	@ docker-compose --file ./vault/docker-compose.yml down
 
+start-tika:
+	@ echo "$(BUILD_PRINT)Starting the Apache Tika services"
+	@ docker-compose --file ./tika/docker-compose.yml --env-file ../.env up -d
 
+stop-tika:
+	@ echo "$(BUILD_PRINT)Stopping the Apache Tika services"
+	@ docker-compose --file ./tika/docker-compose.yml --env-file ../.env down
 
 start-services-all: | build-network build-volumes start-storage start-elk start-mlflow start-airflow2
 
