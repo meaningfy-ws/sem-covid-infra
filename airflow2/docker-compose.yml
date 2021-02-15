@@ -39,7 +39,8 @@
 version: '3'
 x-airflow-common:
   &airflow-common
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.0.1-python3.8}
+  build:
+    context: .
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -48,7 +49,7 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -74,6 +75,9 @@ services:
       interval: 5s
       retries: 5
     restart: always
+    networks:
+      - elk
+
 
   redis:
     image: redis:latest
@@ -85,6 +89,8 @@ services:
       timeout: 30s
       retries: 50
     restart: always
+    networks:
+      - elk
 
   airflow-webserver:
     <<: *airflow-common
@@ -97,16 +103,22 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - elk
 
   airflow-scheduler:
     <<: *airflow-common
     command: scheduler
     restart: always
+    networks:
+      - elk
 
   airflow-worker:
     <<: *airflow-common
     command: celery worker
     restart: always
+    networks:
+      - elk
 
   airflow-init:
     <<: *airflow-common
@@ -117,6 +129,8 @@ services:
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+    networks:
+      - elk
 
   flower:
     <<: *airflow-common
@@ -129,6 +143,13 @@ services:
       timeout: 10s
       retries: 5
     restart: always
+    networks:
+      - elk
 
 volumes:
   postgres-db-volume-airflow:
+
+networks:
+  elk:
+    external:
+          name: elk
