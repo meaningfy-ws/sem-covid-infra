@@ -40,15 +40,6 @@ stop-airflow2:
 	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
 
-start-tika: build-volumes start-storage
-	@ echo "$(BUILD_PRINT)Starting Apache Tika"
-	@ echo "$(BUILD_PRINT)Warning: the shared folders need R/W permissions"
-	@ docker-compose --file docker-compose.yml --env-file .env up -d apache_tika
-
-stop-tika:
-	@ echo "$(BUILD_PRINT)Stopping Apache Tika"
-	@ docker-compose --file docker-compose.yml --env-file .env down
-
 start-elk: build-volumes start-storage
 	@ echo "$(BUILD_PRINT)Starting ELK"
 	@ echo "$(BUILD_PRINT)Warning: the shared folders need R/W permissions"
