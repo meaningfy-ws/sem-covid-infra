@@ -53,6 +53,16 @@ stop-notebook:
 	@ echo "$(BUILD_PRINT)Stopping the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env down
 
+start-vault:
+	@ echo "$(BUILD_PRINT)Starting the Vault services"
+	@ docker-compose --file ./vault/docker-compose.yml up -d
+
+stop-vault:
+	@ echo "$(BUILD_PRINT)Stopping the Vault services"
+	@ docker-compose --file ./vault/docker-compose.yml down
+
+
+
 start-services-all: | build-network build-volumes start-storage start-elk start-mlflow start-airflow2
 
 stop-services-all: | build-volumes start-storage start-elk start-mlflow start-airflow2
