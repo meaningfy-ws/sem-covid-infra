@@ -1,5 +1,7 @@
 version: '3.2'
 
+# This Docker Compose file mainly hosts the ELK stack and some auxiliary services, such as Apache Tika
+
 services:
   elasticsearch:
     container_name: elasticsearch
