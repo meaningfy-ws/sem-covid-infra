@@ -1,0 +1,12 @@
+{
+    "APACHE_TIKA_URL": "http://apache-tika:9998",
+    "ELASTICSEARCH_PASSWORD": "changeme",
+    "ELASTICSEARCH_PORT": 9200,
+    "ELASTICSEARCH_PROTOCOL": "http",
+    "ELASTICSEARCH_URL": "elasticsearch",
+    "ELASTICSEARCH_USERNAME": "elastic",
+    "PWDB_COVID19_RESOURCES": "covid19-resources",
+    "PWDB_DATASET_LOCAL_FILENAME": "covid19db.json",
+    "PWDB_DATASET_URL": "http://static.eurofound.europa.eu/covid19db/data/covid19db.json",
+    "PWDB_ELASTIC_SEARCH_INDEX_NAME": "pwdb-index"
+}
