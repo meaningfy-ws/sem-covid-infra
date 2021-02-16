@@ -76,16 +76,46 @@ Make sure that the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment v
 
 
 ##### Airflow services
+To start teh services
 ```shell script
 make start-airflow2
 ```
+To stop teh services
 ```shell script
 make stop-airflow2
+```
+
+In you need to rebuild teh services (for example because you changed teh dependencies in the requirements.txt) the use this make target
+
+```shell script
+make start-airflow2-build
 ```
 
 The Airflow2 uses three bind mounts instead of volumes in order to facilitate managements of DAGs. Make sure that the three folders have R/W access for all users (this it probably bad idea, but it works for now). In the future recur to using Docker volumes.
  
 This setup of Airflow uses Celery workers which can be monitored using Flower service (by default accessible on :5555 port). 
+
+**Custom pip libraries**
+
+The custom `Dockerfile` is there merely for injecting pip libraries into teh Airflow image. The `requirements.txt` is the place where necessary dependencies are specified. Use it at will but wisely.
+
+**Loading variables**
+
+In case you need to inject variables into the Airflow perform teh following steps.
+1. copy the JSON with with variables into teh `./dags` folder
+2. execute `load_variables.sh` to lad the variables into the Airflow
+
+Usage:
+```
+load_variables.sh <variables_file.json> <airflow_container_name>"
+```
+Note: `variables_file.json` MUST be available in the *./dags* folder. 
+
+**Loading custom modules**
+
+Custom modules will be available to deployed DAGs if they are copied into one of these folders:
+* `./dags`
+* `./plugins`
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

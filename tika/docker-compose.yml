@@ -6,4 +6,10 @@ services:
     image: apache/tika
     ports:
       - ${APACHE_TIKA_PORT:-9998}:9998
+    networks:
+      - elk
 
+networks:
+  elk:
+    external:
+      name: elk

@@ -13,13 +13,17 @@ services:
     restart: always
     volumes:
       - postgres_store_mlflow:/var/lib/postgresql/data
+    networks:
+      - elk
 
   waitfordb:
     image: dadarek/wait-for-dependencies
     depends_on:
       - postgresql
     command: postgresql:${MLFLOW_POSTGRES_PORT}
-
+    networks:
+      - elk
+      -
   mlflow_tracker:
     image: mlflow_tracker
     build:
@@ -36,6 +40,13 @@ services:
     ports:
       - ${MLFLOW_PORT}:${MLFLOW_PORT}
     entrypoint: mlflow server --host 0.0.0.0 --port ${MLFLOW_PORT} --backend-store-uri postgresql+psycopg2://${MLFLOW_POSTGRES_USER}:${MLFLOW_POSTGRES_PASSWORD}@postgresql:5432/mlflow-db --default-artifact-root s3://${MLFLOW_S3_BUCKET_NAME}/
+    networks:
+      - elk
 
 volumes:
   postgres_store_mlflow:
+
+networks:
+  elk:
+    external:
+      name: elk

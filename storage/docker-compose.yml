@@ -1,8 +1,6 @@
 version: '3'
 
 services:
-
-
   minio-s3:
     image: minio/minio:latest
     ports:
@@ -14,6 +12,8 @@ services:
       server /data
     volumes:
       - s3-disk:/data
+    networks:
+      - elk
 
 volumes:
   jupyter-notebook-work:
@@ -21,4 +21,7 @@ volumes:
       name: jupyter-notebook
   s3-disk:
 
-
+networks:
+  elk:
+    external:
+      name: elk
