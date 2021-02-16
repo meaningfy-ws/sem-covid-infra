@@ -6,7 +6,7 @@ services:
   elasticsearch:
     container_name: ${ELK_ELASTICSEARCH_HOST_NAME:-elasticsearch}
     build:
-      context: elasticsearch/
+      context: elasticsearch
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -32,7 +32,7 @@ services:
   logstash:
     container_name: ${ELK_LOGSTASH_HOST_NAME:-logstash}
     build:
-      context: logstash/
+      context: logstash
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -59,7 +59,7 @@ services:
   kibana:
     container_name: ${ELK_KIBANA_HOST_NAME:-kibana}
     build:
-      context: kibana/
+      context: kibana
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
