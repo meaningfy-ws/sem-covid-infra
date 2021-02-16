@@ -20,6 +20,8 @@ volumes:
     external:
       name: jupyter-notebook
   s3-disk:
+    external:
+      name: s3-disk
 
 networks:
   elk:

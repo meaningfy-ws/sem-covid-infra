@@ -81,7 +81,6 @@ services:
     networks:
       - elk
 
-
   redis:
     image: redis:latest
     ports:
