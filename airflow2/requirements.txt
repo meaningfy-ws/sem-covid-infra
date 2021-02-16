@@ -1,0 +1,11 @@
+tika
+elasticsearch
+# mlflow
+# numpy
+# pandas
+# scikit-learn
+# spacy
+# nltk
+# sparqlwrapper
+# rdflib
+# torch

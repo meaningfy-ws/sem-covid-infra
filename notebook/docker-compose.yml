@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3'
 
 services:
   sftp:
@@ -9,6 +9,8 @@ services:
       - ${SFTP_PORT}:22
     #    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
     command: ${SFTP_USER}:${SFTP_PASSWORD}
+    networks:
+      - elk
 
   notebook:
     image: jupyter/datascience-notebook
@@ -19,10 +21,16 @@ services:
       - jupyter-notebook-work:/home/jovyan/work
     ports:
       - ${JUPYTER_PORT}:8888
+    networks:
+      - elk
 
 volumes:
   jupyter-notebook-work:
     external:
       name: jupyter-notebook
 
+networks:
+  elk:
+    external:
+      name: elk
 
