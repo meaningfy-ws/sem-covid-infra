@@ -1,6 +1,7 @@
 build-volumes:
 	@ echo "$(BUILD_PRINT)Creating the necessary volumes and folders and setting special rights"
 	@ docker volume create jupyter-notebook
+	@ docker volume create elasticsearch
 	@ sudo mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 	@ sudo chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 
