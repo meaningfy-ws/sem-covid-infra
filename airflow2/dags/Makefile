@@ -31,13 +31,6 @@ stop-mlflow:
 	@ echo "$(BUILD_PRINT)Stopping the MLFlow services"
 	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down
 
-
-start-airflow2-build: build-volumes
-	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
-	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
-
 start-airflow2: build-volumes
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
 	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
