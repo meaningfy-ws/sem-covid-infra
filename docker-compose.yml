@@ -4,7 +4,7 @@ version: '3.2'
 
 services:
   elasticsearch:
-    container_name: elasticsearch
+    container_name: ${ELK_ELASTICSEARCH_HOST_NAME:-elasticsearch}
     build:
       context: elasticsearch/
       args:
@@ -30,7 +30,7 @@ services:
       - elk
 
   logstash:
-    container_name: logstash
+    container_name: ${ELK_LOGSTASH_HOST_NAME:-logstash}
     build:
       context: logstash/
       args:
@@ -57,7 +57,7 @@ services:
       - elasticsearch
 
   kibana:
-    container_name: kibana
+    container_name: ${ELK_KIBANA_HOST_NAME:-kibana}
     build:
       context: kibana/
       args:
@@ -74,11 +74,12 @@ services:
     depends_on:
       - elasticsearch
 
-#networks:
-#  elk:
-#    external:
-#          name: elk
+networks:
+  elk:
+    external:
+      name: elk
 
 volumes:
   elasticsearch:
-
+    external:
+      name: elasticsearch

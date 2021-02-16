@@ -2,7 +2,7 @@ version: '3'
 
 services:
   apache_tika:
-    container_name: apache-tika
+    container_name:  ${TIKA_HOST_NAME:-tika}
     image: apache/tika
     ports:
       - ${APACHE_TIKA_PORT:-9998}:9998
