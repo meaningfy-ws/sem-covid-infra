@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  apache_tika:
+    container_name:  ${TIKA_HOST_NAME:-apache-tika}
+    image: apache/tika
+    ports:
+      - ${APACHE_TIKA_PORT:-9998}:9998
+    networks:
+      - elk
+
+networks:
+  elk:
+    external:
+      name: elk

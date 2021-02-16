@@ -1,10 +1,12 @@
 version: '3.2'
 
+# This Docker Compose file mainly hosts the ELK stack and some auxiliary services, such as Apache Tika
+
 services:
   elasticsearch:
-    container_name: elasticsearch
+    container_name: ${ELK_ELASTICSEARCH_HOST_NAME:-elasticsearch}
     build:
-      context: elasticsearch/
+      context: elasticsearch
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -20,7 +22,7 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx16G -Xms256m"
-      ELASTIC_PASSWORD: changeme
+      ELASTIC_PASSWORD: ${ELK_ELASTIC_PASSWORD:-changeme}
       # Use single node discovery in order to disable production mode and avoid bootstrap checks.
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
@@ -28,9 +30,9 @@ services:
       - elk
 
   logstash:
-    container_name: logstash
+    container_name: ${ELK_LOGSTASH_HOST_NAME:-logstash}
     build:
-      context: logstash/
+      context: logstash
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -55,9 +57,9 @@ services:
       - elasticsearch
 
   kibana:
-    container_name: kibana
+    container_name: ${ELK_KIBANA_HOST_NAME:-kibana}
     build:
-      context: kibana/
+      context: kibana
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
@@ -72,19 +74,12 @@ services:
     depends_on:
       - elasticsearch
 
-  apache_tika:
-    container_name: apache-tika
-    image: apache/tika
-    ports:
-      - 9998:9998
-    networks:
-      - elk
-
 networks:
   elk:
     external:
-          name: elk
+      name: elk
 
 volumes:
   elasticsearch:
-
+    external:
+      name: elasticsearch
