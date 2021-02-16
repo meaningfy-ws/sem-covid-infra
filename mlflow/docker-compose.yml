@@ -23,7 +23,7 @@ services:
     command: postgresql:${MLFLOW_POSTGRES_PORT}
     networks:
       - elk
-      -
+
   mlflow_tracker:
     image: mlflow_tracker
     build:
