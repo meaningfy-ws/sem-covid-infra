@@ -8,5 +8,9 @@
     "PWDB_COVID19_RESOURCES": "covid19-resources",
     "PWDB_DATASET_LOCAL_FILENAME": "covid19db.json",
     "PWDB_DATASET_URL": "http://static.eurofound.europa.eu/covid19db/data/covid19db.json",
-    "PWDB_ELASTIC_SEARCH_INDEX_NAME": "pwdb-index"
+    "PWDB_ELASTIC_SEARCH_INDEX_NAME": "pwdb-index",
+    "EURLEX_DATASET_LOCAL_FILENAME": "eurlex.json",
+    "EURLEX_RESOURCES": "eurlex-resources",
+    "EURLEX_SPARQL_URL": "http://publications.europa.eu/webapi/rdf/sparql",
+    "EURLEX_ELASTIC_SEARCH_INDEX_NAME": "eurlex-index"
 }
