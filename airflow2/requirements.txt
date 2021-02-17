@@ -6,6 +6,6 @@ elasticsearch
 # scikit-learn
 # spacy
 # nltk
-# sparqlwrapper
+sparqlwrapper
 # rdflib
 # torch
