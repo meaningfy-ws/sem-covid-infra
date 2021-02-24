@@ -8,5 +8,13 @@
     "PWDB_COVID19_RESOURCES": "covid19-resources",
     "PWDB_DATASET_LOCAL_FILENAME": "covid19db.json",
     "PWDB_DATASET_URL": "http://static.eurofound.europa.eu/covid19db/data/covid19db.json",
-    "PWDB_ELASTIC_SEARCH_INDEX_NAME": "pwdb-index"
+    "PWDB_ELASTIC_SEARCH_INDEX_NAME": "pwdb-index",
+    "EURLEX_DATASET_LOCAL_FILENAME": "eurlex.json",
+    "EURLEX_RESOURCES": "eurlex-resources",
+    "EURLEX_SPARQL_URL": "http://publications.europa.eu/webapi/rdf/sparql",
+    "EURLEX_ELASTIC_SEARCH_INDEX_NAME": "eurlex-index",
+    "MINIO_URL": "srv.meaningfy.ws:9000",
+    "PWDB_COVID19_BUCKET_NAME": "pwdb",
+    "MINIO_ACCESS_KEY": "2zVld17bTfKk8iu0Eh9H74MywAeDV3WQ",
+    "MINIO_SECRET_KEY": "ddk9fixfI9qXiMaZu1p2a7BsgY2yDopm"
 }
