@@ -1,11 +1,12 @@
 tika
 elasticsearch
+minio
 # mlflow
 # numpy
 # pandas
 # scikit-learn
 # spacy
 # nltk
-# sparqlwrapper
+sparqlwrapper
 # rdflib
 # torch
