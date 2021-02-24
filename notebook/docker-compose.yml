@@ -19,6 +19,9 @@ services:
             --NotebookApp.token=${JUPYTER_TOKEN}"
     volumes:
       - jupyter-notebook-work:/home/jovyan/work
+    environment:
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
     ports:
       - ${JUPYTER_PORT}:8888
     networks:
