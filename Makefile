@@ -4,6 +4,8 @@ build-externals:
 	@ docker volume create elasticsearch
 	@ docker volume create s3-disk
 	@ docker network create -d bridge elk || true
+
+build-externals-extra:
 	@ sudo mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 	@ sudo chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 
