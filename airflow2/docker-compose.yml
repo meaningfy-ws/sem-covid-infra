@@ -53,6 +53,9 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__DAGBAG_IMPORT_TIMEOUT: "5"
     AIRFLOW__CORE__DAG_FILE_PROCESSOR_TIMEOUT: "5"
+    AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
+    AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
+    MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
