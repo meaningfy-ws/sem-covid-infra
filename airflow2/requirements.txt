@@ -8,5 +8,6 @@ minio
 # spacy
 # nltk
 sparqlwrapper
+jq
 # rdflib
 # torch
