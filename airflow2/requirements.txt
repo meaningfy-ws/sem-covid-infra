@@ -1,13 +1,14 @@
 tika
 elasticsearch
 minio
-# mlflow
-# numpy
-# pandas
-# scikit-learn
-# spacy
-# nltk
+mlflow
+numpy
+pandas
+scikit-learn
+spacy
+nltk
 sparqlwrapper
 jq
-# rdflib
-# torch
+gensim
+rdflib
+torch
