@@ -24,5 +24,8 @@
     "TREATIES_BUCKET_NAME": "treaties",
     "TREATIES_JSON": "treaties.json",
     "TREATIES_ELASTIC_SEARCH_INDEX_NAME": "treaties-index",
-    "TREATIES_SPARQL_URL": "http://publications.europa.eu/webapi/rdf/sparql"
+    "TREATIES_SPARQL_URL": "http://publications.europa.eu/webapi/rdf/sparql",
+    "EURLEX_EXTENDED_ELASTIC_SEARCH_INDEX_NAME":"eurlex-extended-index",
+    "EURLEX_EXTENDED_JSON":"eurlex-extended.json",
+    "EURLEX_EXTENDED_BUCKET_NAME":"eurlex-extended"
 }
