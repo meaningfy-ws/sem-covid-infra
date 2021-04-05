@@ -12,3 +12,4 @@ jq
 gensim
 rdflib
 torch
+scrapy
