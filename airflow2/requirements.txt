@@ -13,3 +13,4 @@ gensim
 rdflib
 torch
 scrapy
+scrapy_splash
