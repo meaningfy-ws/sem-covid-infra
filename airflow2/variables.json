@@ -25,10 +25,10 @@
     "TREATIES_JSON": "treaties.json",
     "TREATIES_ELASTIC_SEARCH_INDEX_NAME": "treaties-index",
     "TREATIES_SPARQL_URL": "http://publications.europa.eu/webapi/rdf/sparql",
-    "EURLEX_EXTENDED_ELASTIC_SEARCH_INDEX_NAME":"eurlex-extended-index",
+    "EURLEX_EXTENDED_ELASTIC_SEARCH_INDEX_NAME":"eurlex-index",
     "EURLEX_EXTENDED_JSON":"eurlex-extended.json",
     "EURLEX_EXTENDED_BUCKET_NAME":"eurlex-extended",
-    "EU_ACTION_TIMELINE_ELASTIC_SEARCH_INDEX_NAME":"eu-timeline",
+    "EU_ACTION_TIMELINE_ELASTIC_SEARCH_INDEX_NAME":"eu-action-timeline-index",
     "SPLASH_URL":"http://srv.meaningfy.ws:5080",
     "EU_ACTION_TIMELINE_JSON":"eu_action_timeline.json",
     "EU_ACTION_TIMELINE_BUCKET_NAME":"eu-action-timeline"
