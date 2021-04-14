@@ -31,5 +31,8 @@
     "EU_ACTION_TIMELINE_ELASTIC_SEARCH_INDEX_NAME":"eu-action-timeline-index",
     "SPLASH_URL":"http://srv.meaningfy.ws:5080",
     "EU_ACTION_TIMELINE_JSON":"eu_action_timeline.json",
-    "EU_ACTION_TIMELINE_BUCKET_NAME":"eu-action-timeline"
+    "EU_ACTION_TIMELINE_BUCKET_NAME":"eu-action-timeline",
+    "IRISH_ACTION_TIMELINE_BUCKET_NAME":"irish-action-timeline",
+    "IRISH_ACTION_TIMELINE_ELASTIC_SEARCH_INDEX_NAME": "irish-action-timeline-index",
+    "IRISH_ACTION_TIMELINE_JSON": "irish_action_timeline.json"
 }
