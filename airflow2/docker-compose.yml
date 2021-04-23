@@ -159,6 +159,10 @@ services:
     networks:
       - elk
 
+  splash:
+    image: scrapinghub/splash
+    ports:
+      - ${SPLASH_EXTERNAL_PORT}:8050
 
 volumes:
   postgres-db-volume-airflow:
