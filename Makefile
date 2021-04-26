@@ -78,3 +78,29 @@ start-services-all: | build-externals start-airflow2-build start-storage start-e
 stop-services-all: | stop-storage stop-elk stop-mlflow stop-airflow2 stop-vault stop-tika stop-notebook
 
 all: start-services-all
+
+# Getting secrets from Vault
+
+# Testing whether an env variable is set or not
+guard-%:
+	@ if [ "${${*}}" = "" ]; then \
+        echo "Environment variable $* not set"; \
+        exit 1; \
+	fi
+
+# Testing that vault is installed
+vault-installed: #; @which vault1 > /dev/null
+	@ if ! hash vault 2>/dev/null; then \
+        echo "Vault is not installed, refer to https://www.vaultproject.io/downloads"; \
+        exit 1; \
+	fi
+
+# Get secrets in dotenv format
+vault_secret_to_dotenv: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
+	@ echo "Writing the mfy/sem-covid secret from Vault to .env"
+	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" > .env
+
+# Get secrets in json format
+vault_secret_to_json: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
+	@ echo "Writing the mfy/sem-covid secret from Vault to variables.json"
+	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" > variables.json
