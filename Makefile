@@ -89,7 +89,7 @@ guard-%:
 	fi
 
 # Testing that vault is installed
-vault-installed: #; @which vault1 > /dev/null
+vault-installed:
 	@ if ! hash vault 2>/dev/null; then \
         echo "Vault is not installed, refer to https://www.vaultproject.io/downloads"; \
         exit 1; \
@@ -98,9 +98,24 @@ vault-installed: #; @which vault1 > /dev/null
 # Get secrets in dotenv format
 vault_secret_to_dotenv: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
 	@ echo "Writing the mfy/sem-covid secret from Vault to .env"
-	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" > .env
+	@ vault kv get -format="json" mfy/sem-covid-infra | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" > .env
+	@ vault kv get -format="json" mfy/jupyter-notebook | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" >> .env
+	@ vault kv get -format="json" mfy/ml-flow | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" >> .env
+	@ vault kv get -format="json" mfy/air-flow | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" >> .env
+	@ vault kv get -format="json" mfy/min-io | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" >> .env
+	@ vault kv get -format="json" mfy/elastic-search | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" >> .env
+	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data | keys[] as \$$k | \"\(\$$k)=\(.[\$$k])\"" >> .env
 
 # Get secrets in json format
 vault_secret_to_json: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
 	@ echo "Writing the mfy/sem-covid secret from Vault to variables.json"
-	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" > variables.json
+	@ vault kv get -format="json" mfy/sem-covid-infra | jq -r ".data.data" > variables.json
+	@ vault kv get -format="json" mfy/jupyter-notebook | jq -r ".data.data" >> variables.json
+	@ vault kv get -format="json" mfy/ml-flow | jq -r ".data.data" >> variables.json
+	@ vault kv get -format="json" mfy/air-flow | jq -r ".data.data" >> variables.json
+	@ vault kv get -format="json" mfy/min-io | jq -r ".data.data" >> variables.json
+	@ vault kv get -format="json" mfy/elastic-search | jq -r ".data.data" >> variables.json
+	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" >> variables.json
+
+vault_secret_fetch: vault_secret_to_dotenv vault_secret_to_json
+
