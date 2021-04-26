@@ -4,11 +4,11 @@ version: '3.2'
 
 services:
   elasticsearch:
-    container_name: ${ELK_ELASTICSEARCH_HOST_NAME:-elasticsearch}
+    container_name: ${ELASTICSEARCH_HOST_NAME_PRIVATE:-elasticsearch}
     build:
       context: elasticsearch
       args:
-        ELK_VERSION: $ELK_VERSION
+        ELK_VERSION: ${ELASTICSEARCH_VERSION_PRIVATE}
     volumes:
       - type: bind
         source: ./elasticsearch/config/elasticsearch.yml
@@ -22,7 +22,7 @@ services:
       - "9300:9300"
     environment:
       ES_JAVA_OPTS: "-Xmx16G -Xms256m"
-      ELASTIC_PASSWORD: ${ELK_ELASTIC_PASSWORD:-changeme}
+      ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD:-changeme}
       # Use single node discovery in order to disable production mode and avoid bootstrap checks.
       # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
       discovery.type: single-node
@@ -30,11 +30,11 @@ services:
       - elk
 
   logstash:
-    container_name: ${ELK_LOGSTASH_HOST_NAME:-logstash}
+    container_name: ${LOGSTASH_HOST_NAME_PRIVATE:-logstash}
     build:
       context: logstash
       args:
-        ELK_VERSION: $ELK_VERSION
+        ELK_VERSION: ${ELASTICSEARCH_VERSION_PRIVATE}
     volumes:
       - type: bind
         source: ./logstash/config/logstash.yml
@@ -57,11 +57,11 @@ services:
       - elasticsearch
 
   kibana:
-    container_name: ${ELK_KIBANA_HOST_NAME:-kibana}
+    container_name: ${KIBANA_HOST_NAME_PRIVATE:-kibana}
     build:
       context: kibana
       args:
-        ELK_VERSION: $ELK_VERSION
+        ELK_VERSION: ${ELASTICSEARCH_VERSION_PRIVATE}
     volumes:
       - type: bind
         source: ./kibana/config/kibana.yml
