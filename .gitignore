@@ -145,3 +145,5 @@ junit_report.xml
 .~lock*.*
 /airflow2/dags/
 /airflow2/plugins/
+variables.json
+tmp_for_vault.json
