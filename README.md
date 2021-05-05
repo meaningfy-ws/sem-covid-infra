@@ -186,12 +186,20 @@ of these folders:
 - `./plugins`
 
 
-## Contribution
+# Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+You are more than welcome to help expand and mature this project.
 
-Please make sure to update tests as appropriate.
+When contributing to this repository, please first discuss the change you wish
+to make via issue, email, or any other method with the owners of this repository
+before making a change.
 
-## License
+Please note we adhere to [Apache code of conduct](https://www.apache.org/foundation/policies/conduct), please follow it in all your
+interactions with the project.
 
-[Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0.html)
+# License
+
+The documents, such as reports and specifications, available in the /doc folder,
+are licenced under a [CC BY 4.0 licence](https://creativecommons.org/licenses/by/4.0/deed.en).
+
+The scripts (stylesheets) and other executables are licenced under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html) licence.
