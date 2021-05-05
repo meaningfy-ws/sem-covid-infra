@@ -170,7 +170,6 @@ In case you need to inject variables into the Airflow perform teh following step
 1. Copy the JSON with with variables into teh `./dags` folder
 2. execute `load_variables.sh` to lad the variables into the Airflow
 
-Usage:
 ```
 load_variables.sh <variables_file.json> <airflow_container_name>"
 ```
