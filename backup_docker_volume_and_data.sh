@@ -1,6 +1,6 @@
 #!/bin/bash
-
 # This script creates backups for various docker containers
+
 timestamp=$(date +%Y.%m.%d_at_%H.%M.%S)
 mkdir -p ~/.docker-backup/$timestamp
 
