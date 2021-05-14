@@ -16,9 +16,6 @@ services:
       - elk
 
 volumes:
-  jupyter-notebook-work:
-    external:
-      name: jupyter-notebook
   s3-disk:
     external:
       name: s3-disk

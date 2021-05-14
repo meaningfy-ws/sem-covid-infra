@@ -121,3 +121,13 @@ vault_secret_to_json: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
 
 vault_secret_fetch: vault_secret_to_dotenv vault_secret_to_json
 
+
+backup:
+	@ echo "$(BUILD_PRINT)Creating backup for all services..."
+	@ ./resources/scripts/backup_docker_volume_and_data.sh
+
+
+restore:
+	@ echo "$(BUILD_PRINT)Restoring backups for all services..."
+	@ ./resources/scripts/restore_docker_volumes_and_data.sh $(source)
+
