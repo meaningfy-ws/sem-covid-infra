@@ -147,3 +147,4 @@ junit_report.xml
 /airflow2/plugins/
 variables.json
 tmp_for_vault.json
+/accessor.txt
