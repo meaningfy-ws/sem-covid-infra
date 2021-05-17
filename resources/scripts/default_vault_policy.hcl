@@ -87,12 +87,12 @@ path "sys/control-group/request" {
 }
 
 # Allow password change
-path "auth/userpass/users/{{identity.entity.aliases.auth_userpass_92d39f34.name}}" {
-  capabilities = [ "update" ]
-  allowed_parameters = {
-    "password" = []
-  }
-}
+# path "auth/userpass/users/{{identity.entity.aliases.auth_userpass_92d39f34.name}}" {
+#  capabilities = [ "update" ]
+#  allowed_parameters = {
+#    "password" = []
+#  }
+# }
 
 # Allow full control over *mfy*
 

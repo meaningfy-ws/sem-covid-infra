@@ -74,9 +74,9 @@ enable_features
 enable_github_to_meanigfy
 update_default_policy
 
-create_dual_aliased_entity "Eugeniu Costetchi" costezki
-create_dual_aliased_entity "Laurentiu Mandru" mclaurentiu
-create_dual_aliased_entity "Stefan Stratulat" CaptainOfHacks
-create_dual_aliased_entity "Dan Chiriac" DanCh11
-create_dual_aliased_entity "Dragos Paun" Dragos0000
+create_github_aliased_entity "Eugeniu Costetchi" costezki
+create_github_aliased_entity "Laurentiu Mandru" mclaurentiu
+create_github_aliased_entity "Stefan Stratulat" CaptainOfHacks
+create_github_aliased_entity "Dan Chiriac" DanCh11
+create_github_aliased_entity "Dragos Paun" Dragos0000
 clean_tmp
