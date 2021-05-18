@@ -4,12 +4,12 @@ services:
   sftp:
     image: atmoz/sftp
     volumes:
-      - jupyter-notebook-work:/home/jovyan
+      - jupyter-notebook-work:/home/jovyan/upload
     ports:
       - ${SFTP_PORT}:22
     #    command: ${SFTP_USER}:${SFTP_PASSWORD}:::upload
     #    command: ${SFTP_USER}:${SFTP_PASSWORD}:${SFTP_USER_ID}::upload
-    command: jovyan:${SFTP_PASSWORD}:1000::upload
+    command: jovyan:${SFTP_PASSWORD}:::upload
     networks:
       - elk
 
