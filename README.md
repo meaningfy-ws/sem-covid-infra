@@ -19,7 +19,7 @@ It contains the following tech services:
 Here are respresented the technology stack we employ and the design of the
 workflows for creating the datasets:
 
-![image](export.png)
+![image](docs/export.png)
 
 The architecture split into three layers:
 - Platform as a Service (PaaS) layer
