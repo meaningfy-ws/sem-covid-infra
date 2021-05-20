@@ -6,8 +6,8 @@ build-externals:
 	@ docker network create -d bridge elk || true
 
 build-externals-extra:
-	@ sudo mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
-	@ sudo chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
+	@ mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
+	@ chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 
 start-elk: build-externals
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
@@ -131,3 +131,18 @@ restore:
 	@ echo "$(BUILD_PRINT)Restoring backups for all services..."
 	@ ./resources/scripts/restore_docker_volumes_and_data.sh $(source)
 
+get-sem-covid-repository:
+	@ echo "$(BUILD_PRINT)Getting the latest version fo teh repository..."
+	@ if [ ! -d 'sem-covid' ]; then \
+		git clone git@github.com:meaningfy-ws/sem-covid.git; \
+	 else \
+	   	echo "$(BUILD_PRINT)Folder **sem-covid** already exists"; \
+  	 fi
+	@ cd sem-covid && git checkout main && git pull origin
+
+
+deploy-to-airflow: | build-externals-extra get-sem-covid-repository
+	@ echo "$(BUILD_PRINT)Deploying into airflow ..."
+	@ cd airflow2/dags  && rm -rf airflow2/dags/sem_covid
+	@ cp -rf sem-covid/sem_covid airflow2/dags
+	@ cp -rf sem-covid/resources airflow2/dags

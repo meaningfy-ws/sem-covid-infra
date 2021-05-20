@@ -145,6 +145,9 @@ junit_report.xml
 .~lock*.*
 /airflow2/dags/
 /airflow2/plugins/
+/airflow2/logs/
 variables.json
 tmp_for_vault.json
-/accessor.txt
+tmp_accessor.txt
+tmp_id.txt
+temp/
