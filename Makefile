@@ -134,7 +134,7 @@ restore:
 get-sem-covid-repository:
 	@ echo "$(BUILD_PRINT)Getting the latest version fo teh repository..."
 	@ if [ ! -d 'sem-covid' ]; then \
-		git clone git@github.com:meaningfy-ws/sem-covid.git; \
+		git clone https://github.com/meaningfy-ws/sem-covid.git; \
 	 else \
 	   	echo "$(BUILD_PRINT)Folder **sem-covid** already exists"; \
   	 fi
