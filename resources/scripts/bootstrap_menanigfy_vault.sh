@@ -79,4 +79,5 @@ create_github_aliased_entity "Laurentiu Mandru" mclaurentiu
 create_github_aliased_entity "Stefan Stratulat" CaptainOfHacks
 create_github_aliased_entity "Dan Chiriac" DanCh11
 create_github_aliased_entity "Dragos Paun" Dragos0000
+create_github_aliased_entity "Bogdan Donu" DonuBogdan
 clean_tmp
