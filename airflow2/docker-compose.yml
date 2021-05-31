@@ -56,6 +56,8 @@ x-airflow-common:
     AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY}
     AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY}
     MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
+    VAULT_TOKEN : ${VAULT_TOKEN}
+    VAULT_ADDR : ${VAULT_ADDR}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
