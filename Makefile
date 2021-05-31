@@ -8,6 +8,8 @@ build-externals:
 build-externals-extra:
 	@ mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 	@ chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
+	@ mkdir -p  ./vault/data ./vault/policies
+	@ chmod 777  ./vault/data ./vault/policies
 
 start-elk: build-externals
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
@@ -57,7 +59,7 @@ stop-notebook:
 	@ echo "$(BUILD_PRINT)Stopping the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env down
 
-start-vault:
+start-vault: build-externals-extra
 	@ echo "$(BUILD_PRINT)Starting the Vault services"
 	@ docker-compose --file ./vault/docker-compose.yml up -d
 
@@ -117,8 +119,21 @@ vault_secret_to_json: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
 	@ vault kv get -format="json" mfy/min-io | jq -r ".data.data" > tmp5.json
 	@ vault kv get -format="json" mfy/elastic-search | jq -r ".data.data" > tmp6.json
 	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" > tmp7.json
-	@ jq -s '.[0] * .[1] * .[2] * .[3] * .[4] * .[5] * .[6]' tmp*.json> variables.json
+	@ vault kv get -format="json" mfy/vault | jq -r ".data.data" > tmp8.json
+	@ jq -s '.[0] * .[1] * .[2] * .[3] * .[4] * .[5] * .[6] * .[7]' tmp*.json> variables.json
 	@ rm tmp*.json
+
+vault_secret_to_json_separated: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
+	@ echo "Writing the mfy/sem-covid secret from Vault to own files"
+	@ vault kv get -format="json" mfy/sem-covid-infra | jq -r ".data.data" > sem-covid-infra.json
+	@ vault kv get -format="json" mfy/jupyter-notebook | jq -r ".data.data" > jupyter-notebook.json
+	@ vault kv get -format="json" mfy/ml-flow | jq -r ".data.data" > ml-flow.json
+	@ vault kv get -format="json" mfy/air-flow | jq -r ".data.data" > air-flow.json
+	@ vault kv get -format="json" mfy/min-io | jq -r ".data.data" > min-io.json
+	@ vault kv get -format="json" mfy/elastic-search | jq -r ".data.data" > elastic-search.json
+	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" > sem-covid.json
+	@ vault kv get -format="json" mfy/vault | jq -r ".data.data" > vault.json
+
 
 vault_secret_fetch: vault_secret_to_dotenv vault_secret_to_json
 

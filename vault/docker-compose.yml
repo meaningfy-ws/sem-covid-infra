@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-
   vault:
     image: vault:latest
+    restart: always
     volumes:
       - ./config:/vault/config
       - ./policies:/vault/policies
-      - ./data:/vault/data
+      - ./data:/vault/data:rw
     ports:
       - 8200:8200
     environment:
