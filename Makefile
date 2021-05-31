@@ -8,6 +8,8 @@ build-externals:
 build-externals-extra:
 	@ mkdir -p  ./airflow2/logs ./airflow2/plugins ./airflow2/dags
 	@ chmod 777 ./airflow2/logs ./airflow2/plugins ./airflow2/dags
+	@ mkdir -p  ./vault/data ./vault/policies
+	@ chmod 777  ./vault/data ./vault/policies
 
 start-elk: build-externals
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
@@ -57,7 +59,7 @@ stop-notebook:
 	@ echo "$(BUILD_PRINT)Stopping the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env down
 
-start-vault:
+start-vault: build-externals-extra
 	@ echo "$(BUILD_PRINT)Starting the Vault services"
 	@ docker-compose --file ./vault/docker-compose.yml up -d
 
