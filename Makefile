@@ -134,6 +134,16 @@ vault_secret_to_json_separated: guard-VAULT_ADDR guard-VAULT_TOKEN vault-install
 	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" > sem-covid.json
 	@ vault kv get -format="json" mfy/vault | jq -r ".data.data" > vault.json
 
+vault_secret_to_json_separated_dev: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
+	@ echo "Writing the mfy/sem-covid secret from Vault to own files"
+	@ vault kv get -format="json" mfy-dev/sem-covid-infra | jq -r ".data.data" > sem-covid-infra.json
+	@ vault kv get -format="json" mfy-dev/jupyter-notebook | jq -r ".data.data" > jupyter-notebook.json
+	@ vault kv get -format="json" mfy-dev/ml-flow | jq -r ".data.data" > ml-flow.json
+	@ vault kv get -format="json" mfy-dev/air-flow | jq -r ".data.data" > air-flow.json
+	@ vault kv get -format="json" mfy-dev/min-io | jq -r ".data.data" > min-io.json
+	@ vault kv get -format="json" mfy-dev/elastic-search | jq -r ".data.data" > elastic-search.json
+	@ vault kv get -format="json" mfy-dev/sem-covid | jq -r ".data.data" > sem-covid.json
+	@ vault kv get -format="json" mfy-dev/vault | jq -r ".data.data" > vault.json
 
 vault_secret_fetch: vault_secret_to_dotenv vault_secret_to_json
 
