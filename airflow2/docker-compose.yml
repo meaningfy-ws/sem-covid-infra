@@ -39,9 +39,6 @@
 version: '3'
 x-airflow-common:
   &airflow-common
-  image: airflow2_meaningfy:latest
-  build:
-    context: .
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -102,6 +99,8 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
+    depends_on:
+      - build-airflow-image
     command: webserver
     ports:
       - ${AIRFLOW_PORT:-8080}:8080
@@ -114,8 +113,16 @@ services:
     networks:
       - elk
 
+  build-airflow-image:
+    <<: *airflow-common
+    image: airflow2_meaningfy:latest
+    build:
+      context: .
+
   airflow-scheduler:
     <<: *airflow-common
+    depends_on:
+      - build-airflow-image
     command: scheduler
     restart: always
     networks:
@@ -123,6 +130,8 @@ services:
 
   airflow-worker:
     <<: *airflow-common
+    depends_on:
+      - build-airflow-image
     command: celery worker
     restart: always
     networks:
@@ -130,6 +139,8 @@ services:
 
   airflow-init:
     <<: *airflow-common
+    depends_on:
+      - build-airflow-image
     command: version
     environment:
       <<: *airflow-common-env
@@ -142,6 +153,8 @@ services:
 
   flower:
     <<: *airflow-common
+    depends_on:
+      - build-airflow-image
     command: celery flower
     ports:
       - 5555:5555
