@@ -35,22 +35,6 @@ stop-mlflow:
 	@ echo "$(BUILD_PRINT)Stopping the MLFlow services"
 	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down
 
-
-start-airflow2-build: build-externals
-	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
-	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
-
-start-airflow2: build-externals
-	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
-	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
-
-stop-airflow2:
-	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
-
 start-notebook: build-externals
 	@ echo "$(BUILD_PRINT)Starting the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env up -d
@@ -134,6 +118,16 @@ vault_secret_to_json_separated: guard-VAULT_ADDR guard-VAULT_TOKEN vault-install
 	@ vault kv get -format="json" mfy/sem-covid | jq -r ".data.data" > sem-covid.json
 	@ vault kv get -format="json" mfy/vault | jq -r ".data.data" > vault.json
 
+vault_secret_to_json_separated_dev: guard-VAULT_ADDR guard-VAULT_TOKEN vault-installed
+	@ echo "Writing the mfy/sem-covid secret from Vault to own files"
+	@ vault kv get -format="json" mfy-dev/sem-covid-infra | jq -r ".data.data" > sem-covid-infra.json
+	@ vault kv get -format="json" mfy-dev/jupyter-notebook | jq -r ".data.data" > jupyter-notebook.json
+	@ vault kv get -format="json" mfy-dev/ml-flow | jq -r ".data.data" > ml-flow.json
+	@ vault kv get -format="json" mfy-dev/air-flow | jq -r ".data.data" > air-flow.json
+	@ vault kv get -format="json" mfy-dev/min-io | jq -r ".data.data" > min-io.json
+	@ vault kv get -format="json" mfy-dev/elastic-search | jq -r ".data.data" > elastic-search.json
+	@ vault kv get -format="json" mfy-dev/sem-covid | jq -r ".data.data" > sem-covid.json
+	@ vault kv get -format="json" mfy-dev/vault | jq -r ".data.data" > vault.json
 
 vault_secret_fetch: vault_secret_to_dotenv vault_secret_to_json
 
@@ -147,18 +141,39 @@ restore:
 	@ echo "$(BUILD_PRINT)Restoring backups for all services..."
 	@ ./resources/scripts/restore_docker_volumes_and_data.sh $(source)
 
+#
+# The Airflow Enterprise for the Sem Covid project
+#
+
+# downloading the sem-covid repository
 get-sem-covid-repository:
 	@ echo "$(BUILD_PRINT)Getting the latest version fo teh repository..."
-	@ if [ ! -d 'sem-covid' ]; then \
-		git clone https://github.com/meaningfy-ws/sem-covid.git; \
+	@ mkdir -p airflow2/sem-covid
+	@ if [ ! -d 'airflow2/sem-covid' ]; then \
+		git clone https://github.com/meaningfy-ws/sem-covid.git airflow2/sem-covid; \
 	 else \
 	   	echo "$(BUILD_PRINT)Folder **sem-covid** already exists"; \
   	 fi
-	@ cd sem-covid && git checkout main && git pull origin
+	@ cd airflow2/sem-covid && git checkout main && git pull origin
 
+start-airflow2-build: build-externals
+	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
+	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
 
+start-airflow2: build-externals
+	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
+	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
+
+stop-airflow2:
+	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
+
+# when the Airflow service runs, this target deploys a fresh version of teh sem-covid repos
 deploy-to-airflow: | build-externals-extra get-sem-covid-repository
-	@ echo "$(BUILD_PRINT)Deploying into airflow ..."
-	@ cd airflow2/dags  && rm -rf airflow2/dags/sem_covid
-	@ cp -rf sem-covid/sem_covid airflow2/dags
-	@ cp -rf sem-covid/resources airflow2/dags
+	@ echo "$(BUILD_PRINT)Deploying into running Airflow ..."
+	@ cd airflow2/dags && rm -rf airflow2/dags
+	@ cp -rf airflow2/sem-covid/sem_covid airflow2/dags
+	@ cp -rf airflow2/sem-covid/resources airflow2/dags

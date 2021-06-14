@@ -1,10 +1,21 @@
-FROM apache/airflow:2.0.1-python3.8
+#FROM apache/airflow:2.0.1-python3.8
+#FROM  apache/airflow:latest-python3.8
+FROM apache/airflow:2.1.0-python3.8
 
+# quick sudo
+USER root
+RUN apt-get update && apt-get install make
+
+# back to normal user
 USER airflow
 
-RUN pip install --upgrade pip
-COPY requirements.txt /opt/airflow
-RUN pip install --no-cache-dir --user -r /opt/airflow/requirements.txt
+# Makefile, requirements.txt and requirements/ folder shall be made availble from teh **sem-covid** GitHub repository
+# https://github.com/meaningfy-ws/sem-covid
+# Assuming that the above requirements are met, copy the needed files into the Docker container
+COPY sem-covid/requirements.txt /opt/airflow
+COPY sem-covid/requirements/ /opt/airflow/requirements/
+COPY sem-covid/Makefile /opt/airflow
 
-# COPY variables.json /opt/airflow/dags
-# RUN airflow variables import /opt/airflow/dags/variables.json
+# working in the /opt/airflow
+WORKDIR /opt/airflow
+RUN make install
