@@ -148,15 +148,15 @@ restore:
 # downloading the sem-covid repository
 get-sem-covid-repository:
 	@ echo "$(BUILD_PRINT)Getting the latest version fo teh repository..."
-	@ mkdir -p airflow2/sem-covid
 	@ if [ ! -d 'airflow2/sem-covid' ]; then \
+		mkdir -p airflow2/sem-covid; \
 		git clone https://github.com/meaningfy-ws/sem-covid.git airflow2/sem-covid; \
 	 else \
 	   	echo "$(BUILD_PRINT)Folder **sem-covid** already exists"; \
   	 fi
 	@ cd airflow2/sem-covid && git checkout main && git pull origin
 
-start-airflow2-build: build-externals
+start-airflow2-build: build-externals get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
 	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
