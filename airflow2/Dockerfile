@@ -18,4 +18,5 @@ COPY sem-covid/Makefile /opt/airflow
 
 # working in the /opt/airflow
 WORKDIR /opt/airflow
-RUN make install
+RUN /usr/local/bin/python -m pip install --upgrade pip
+#RUN make install

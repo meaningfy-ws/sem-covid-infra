@@ -159,6 +159,9 @@ get-sem-covid-repository:
 start-airflow2-build: build-externals get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
 	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
+	@ docker stop `docker ps -q --filter ancestor=airflow2_meaningfy` || true
+	@ docker container prune -f
+	@ docker image rm airflow2_meaningfy || true
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
 
