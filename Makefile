@@ -59,7 +59,7 @@ stop-tika:
 	@ echo "$(BUILD_PRINT)Stopping the Apache Tika services"
 	@ docker-compose --file ./tika/docker-compose.yml --env-file ../.env down
 
-start-services-all: | build-externals start-airflow2-build start-storage start-elk start-mlflow start-airflow2 start-tika start-notebook start-vault
+start-services-all: | build-externals start-storage start-elk start-mlflow start-airflow2 start-tika start-notebook start-vault
 
 stop-services-all: | stop-storage stop-elk stop-mlflow stop-airflow2 stop-vault stop-tika stop-notebook
 

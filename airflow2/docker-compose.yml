@@ -39,6 +39,7 @@
 version: '3'
 x-airflow-common:
   &airflow-common
+  image: airflow2_meaningfy:latest
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -97,6 +98,14 @@ services:
     networks:
       - elk
 
+  build-airflow-image:
+    <<: *airflow-common
+    image: airflow2_meaningfy:latest
+    build:
+      context: .
+    environment:
+      <<: *airflow-common-env
+
   airflow-webserver:
     <<: *airflow-common
     depends_on:
@@ -112,12 +121,6 @@ services:
     restart: always
     networks:
       - elk
-
-  build-airflow-image:
-    <<: *airflow-common
-    image: airflow2_meaningfy:latest
-    build:
-      context: .
 
   airflow-scheduler:
     <<: *airflow-common
