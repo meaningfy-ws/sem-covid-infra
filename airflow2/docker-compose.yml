@@ -98,18 +98,10 @@ services:
     networks:
       - elk
 
-  build-airflow-image:
-    <<: *airflow-common
-    image: airflow2_meaningfy:latest
-    build:
-      context: .
-    environment:
-      <<: *airflow-common-env
-
   airflow-webserver:
     <<: *airflow-common
     depends_on:
-      - build-airflow-image
+      - airflow-init
     command: webserver
     ports:
       - ${AIRFLOW_PORT:-8080}:8080
@@ -125,7 +117,7 @@ services:
   airflow-scheduler:
     <<: *airflow-common
     depends_on:
-      - build-airflow-image
+      - airflow-init
     command: scheduler
     restart: always
     networks:
@@ -134,7 +126,7 @@ services:
   airflow-worker:
     <<: *airflow-common
     depends_on:
-      - build-airflow-image
+      - airflow-init
     command: celery worker
     restart: always
     networks:
@@ -142,8 +134,8 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    depends_on:
-      - build-airflow-image
+    build:
+      context: .
     command: version
     environment:
       <<: *airflow-common-env
@@ -157,7 +149,7 @@ services:
   flower:
     <<: *airflow-common
     depends_on:
-      - build-airflow-image
+      - airflow-init
     command: celery flower
     ports:
       - 5555:5555
