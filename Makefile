@@ -59,9 +59,9 @@ stop-tika:
 	@ echo "$(BUILD_PRINT)Stopping the Apache Tika services"
 	@ docker-compose --file ./tika/docker-compose.yml --env-file ../.env down
 
-start-services-all: | build-externals start-storage start-elk start-mlflow start-airflow2 start-tika start-notebook start-vault
+start-services-all: | build-externals start-storage start-elk start-mlflow start-airflow2 start-tika start-notebook start-vault import-kibana-dashboards
 
-stop-services-all: | stop-storage stop-elk stop-mlflow stop-airflow2 stop-vault stop-tika stop-notebook
+stop-services-all: | export-kibana-dashboards stop-storage stop-elk stop-mlflow stop-airflow2 stop-vault stop-tika stop-notebook
 
 all: start-services-all
 
@@ -180,3 +180,12 @@ deploy-to-airflow: | build-externals-extra get-sem-covid-repository
 	@ cd airflow2/dags && rm -rf airflow2/dags
 	@ cp -rf airflow2/sem-covid/sem_covid airflow2/dags
 	@ cp -rf airflow2/sem-covid/resources airflow2/dags
+
+
+export-kibana-dashboards:
+	@ echo "$(BUILD_PRINT)Exporting Kibana dashboards..."
+	@ ./resources/scripts/export-kibana-dashboards.sh ../kibana_dashboards
+
+import-kibana-dashboards:
+	@ echo "$(BUILD_PRINT)Importing Kibana dashboards..."
+	@ ./resources/scripts/import-kibana-dashboards.sh ../kibana_dashboards
