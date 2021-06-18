@@ -11,11 +11,11 @@ build-externals-extra:
 	@ mkdir -p  ./vault/data ./vault/policies
 	@ chmod 777  ./vault/data ./vault/policies
 
-start-elk: build-externals
+start-elk: build-externals import-kibana-dashboards
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
 	@ docker-compose --file ./elk/docker-compose.yml --env-file ../.env up -d
 
-stop-elk:
+stop-elk: export-kibana-dashboards
 	@ echo "$(BUILD_PRINT)Stopping the ELK and other services"
 	@ docker-compose --file ./elk/docker-compose.yml --env-file ../.env down
 
