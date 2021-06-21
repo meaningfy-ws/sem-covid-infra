@@ -13,7 +13,7 @@ export_all_dashboards() {
   if [ -z "$DASHBOARD_IDS" ]; then
     echo "There are no dashboards to export from Kibana"
   else
-    mkdir $1
+    mkdir -p $1
 
     for DASHBOARD_ID in $DASHBOARD_IDS; do
       echo "Downloading dashboard with id = $DASHBOARD_ID"
