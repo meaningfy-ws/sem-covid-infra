@@ -22,6 +22,7 @@ update_default_policy() {
   vault policy write default default_vault_policy.hcl
 }
 
+# deprecated
 tmp_accessor_userpass() {
   # create temporary accessor file with the userpass id
   rm -f $TMP_ACCESSOR_FILE
@@ -34,6 +35,7 @@ tmp_accessor_github() {
   vault auth list -format=json | jq -r '.["github/"].accessor' >$TMP_ACCESSOR_FILE
 }
 
+# deprecated
 create_dual_aliased_entity() {
   # create teh entities and assign the userpass and github aliases
   echo "Creating $1 named entity with userpass and GitHub alias $2"
@@ -69,13 +71,20 @@ clean_tmp() {
   rm -f $TMP_ACCESSOR_FILE
 }
 
+extend_ttl_token_policy() {
+    TTL=86400000s # 1000 years
+    vault write sys/auth/token/tune max_lease_ttl=$TTL
+    vault write sys/auth/token/tune default_lease_ttl=$TTL
+}
+
 clean_tmp
 enable_features
 enable_github_to_meanigfy
 update_default_policy
+extend_ttl_token_policy
 
 create_github_aliased_entity "Eugeniu Costetchi" costezki
-create_github_aliased_entity "Laurentiu Mandru" mclaurentiu
+# create_github_aliased_entity "Laurentiu Mandru" mclaurentiu
 create_github_aliased_entity "Stefan Stratulat" CaptainOfHacks
 create_github_aliased_entity "Dan Chiriac" DanCh11
 create_github_aliased_entity "Dragos Paun" Dragos0000
