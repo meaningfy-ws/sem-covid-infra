@@ -142,8 +142,10 @@ make stop-mlflow
 ```
 
 Make sure that there is a bucket called `mlflow` in the Min.io service. To test that the MLFlow service works as
-expected by running on a local machine
-(not the server) teh script `./mlflow/test_bash_ml_flow.sh`.
+expected by running on a local machine (not the server) run the test script 
+```
+mlflow/test_bash_ml_flow.sh
+```
 
 Make sure that the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables are set in order to grant
 access to the Min.io bucket. Also make sure that teh Min.io hostname is also set properly.
