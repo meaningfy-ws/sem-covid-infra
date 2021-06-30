@@ -108,7 +108,7 @@ The stack is pre-configured with the following privileged bootstrap user:
 - user: *elastic*
 - password: *changeme*
 
-The ELK users and password MUST be changed. Please refer to THIS page for additional information on how to increase the
+The ELK users and password MUST be changed. Please refer to [THIS](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-change-password.html) page for additional information on how to increase the
 ELK security.
 
 **Jupyter Notebook services**
