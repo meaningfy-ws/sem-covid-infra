@@ -72,9 +72,12 @@ clean_tmp() {
 }
 
 extend_ttl_token_policy() {
-    TTL=86400000s # 1000 years
+    TTL=864000000s # 1000 days
     vault write sys/auth/token/tune max_lease_ttl=$TTL
     vault write sys/auth/token/tune default_lease_ttl=$TTL
+
+    vault write sys/auth/github/tune max_lease_ttl=$TTL
+    vault write sys/auth/github/tune default_lease_ttl=$TTL
 }
 
 clean_tmp
