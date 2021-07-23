@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install make && apt-get install build-essential -y
 # back to normal user
 USER airflow
 
-# Makefile, requirements.txt and requirements/ folder shall be made availble from teh **sem-covid** GitHub repository
+# Makefile, requirements-prod.txt and requirements-dev.txt shall be made availble from teh **sem-covid** GitHub repository
 # https://github.com/meaningfy-ws/sem-covid
 # Assuming that the above requirements are met, copy the needed files into the Docker container
 COPY sem-covid/requirements-prod.txt /opt/airflow
@@ -18,4 +18,5 @@ COPY sem-covid/Makefile /opt/airflow
 # working in the /opt/airflow
 WORKDIR /opt/airflow
 RUN /usr/local/bin/python -m pip install --upgrade pip
-RUN make install
+#this is from Makefile in **sem-covid**
+RUN make install-prod
