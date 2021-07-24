@@ -1,6 +1,6 @@
 #FROM apache/airflow:2.0.1-python3.8
 #FROM  apache/airflow:latest-python3.8
-FROM apache/airflow:2.1.0-python3.8
+FROM apache/airflow:2.1.2-python3.8
 
 # quick sudo
 USER root
@@ -19,4 +19,4 @@ COPY sem-covid/Makefile /opt/airflow
 WORKDIR /opt/airflow
 RUN /usr/local/bin/python -m pip install --upgrade pip
 #this is from Makefile in **sem-covid**
-RUN make install-prod
+RUN make install
