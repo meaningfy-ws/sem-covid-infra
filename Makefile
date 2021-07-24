@@ -157,13 +157,18 @@ get-sem-covid-repository:
 	@ cd airflow2/sem-covid && git checkout main && git pull origin
 
 start-airflow2-build: build-externals get-sem-covid-repository
-	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
+	@ echo "$(BUILD_PRINT)Rebuildig the image and then starting the AirFlow services. "
+	@ echo "$(BUILD_PRINT)Expecting to find sem-covid repo in .airflow2/sem-covid folder"
+	@ echo "$(BUILD_PRINT)The Dockerfile will be fetched from teh sem-covid repository"
 	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
+	@ cp airflow2/sem-covid/docker/airflow/Dockerfile airflow2/
+	@ cp airflow2/sem-covid/requirements-airflow.txt airflow2/
 	@ docker stop `docker ps -q --filter ancestor=airflow2_meaningfy` || true
 	@ docker container prune -f
 	@ docker image rm airflow2_meaningfy || true
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ rm airflow2/requirements-airflow.txt || true
 
 start-airflow2: build-externals
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
