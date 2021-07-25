@@ -14,7 +14,9 @@ services:
       - elk
 
   notebook:
-    image: jupyter/datascience-notebook
+    image: notebook_meaningfy:latest
+    build:
+      context: .
     command: "start-notebook.sh \
             --NotebookApp.password=${JUPYTER_PASSWORD} \
             --NotebookApp.token=${JUPYTER_TOKEN}"

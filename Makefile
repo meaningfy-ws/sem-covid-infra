@@ -39,6 +39,17 @@ start-notebook: build-externals
 	@ echo "$(BUILD_PRINT)Starting the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env up -d
 
+start-notebook-build: build-externals get-sem-covid-repository
+	@ echo "$(BUILD_PRINT)Rebuildig the image and then starting the Jupyter Notebook services"
+	@ echo "$(BUILD_PRINT)Expecting to find sem-covid repo in .airflow2/sem-covid folder"
+	@ cp airflow2/sem-covid/requirements-dev.txt notebook/
+	@ docker stop `docker ps -q --filter ancestor=notebook_meaningfy` || true
+	@ docker container prune -f
+	@ docker image rm notebook_meaningfy || true
+	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ rm notebook/requirements-dev.txt || true
+
 stop-notebook:
 	@ echo "$(BUILD_PRINT)Stopping the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env down
