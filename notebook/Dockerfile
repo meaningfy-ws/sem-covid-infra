@@ -10,5 +10,5 @@ RUN python -m pip install --upgrade pip
 
 COPY requirements-dev.txt ./requirements.txt
 #RUN pip install --no-cache-dir -r requirements.txt
-RUN conda install --file requirements.txt
-
+#RUN conda install --file requirements.txt
+RUN ~/anaconda3/bin/pip install -r requirements-dev.txt
