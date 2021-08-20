@@ -193,7 +193,7 @@ stop-airflow2:
 # when the Airflow service runs, this target deploys a fresh version of teh sem-covid repos
 deploy-to-airflow: | build-externals-extra get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Deploying into running Airflow ..."
-	@ cd airflow2/dags && rm -rf airflow2/dags
+	@ rm -rf airflow2/dags/*
 	@ cp -rf airflow2/sem-covid/sem_covid airflow2/dags
 	@ cp -rf airflow2/sem-covid/resources airflow2/dags
 
