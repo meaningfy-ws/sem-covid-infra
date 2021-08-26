@@ -39,6 +39,17 @@ start-notebook: build-externals
 	@ echo "$(BUILD_PRINT)Starting the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env up -d
 
+start-notebook-build: build-externals get-sem-covid-repository
+	@ echo "$(BUILD_PRINT)Rebuildig the image and then starting the Jupyter Notebook services"
+	@ echo "$(BUILD_PRINT)Expecting to find sem-covid repo in .airflow2/sem-covid folder"
+	@ cp airflow2/sem-covid/requirements-dev.txt notebook/
+	@ docker stop `docker ps -q --filter ancestor=notebook_meaningfy` || true
+	@ docker container prune -f
+	@ docker image rm notebook_meaningfy || true
+	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ rm notebook/requirements-dev.txt || true
+
 stop-notebook:
 	@ echo "$(BUILD_PRINT)Stopping the Jupyter Notebook services"
 	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env down
@@ -157,13 +168,18 @@ get-sem-covid-repository:
 	@ cd airflow2/sem-covid && git checkout main && git pull origin
 
 start-airflow2-build: build-externals get-sem-covid-repository
-	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
+	@ echo "$(BUILD_PRINT)Rebuildig the image and then starting the AirFlow services. "
+	@ echo "$(BUILD_PRINT)Expecting to find sem-covid repo in .airflow2/sem-covid folder"
+	@ echo "$(BUILD_PRINT)The Dockerfile will be fetched from teh sem-covid repository"
 	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
+	@ cp airflow2/sem-covid/docker/airflow/Dockerfile airflow2/
+	@ cp airflow2/sem-covid/requirements-airflow.txt airflow2/
 	@ docker stop `docker ps -q --filter ancestor=airflow2_meaningfy` || true
 	@ docker container prune -f
 	@ docker image rm airflow2_meaningfy || true
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ rm airflow2/requirements-airflow.txt || true
 
 start-airflow2: build-externals
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
@@ -177,7 +193,7 @@ stop-airflow2:
 # when the Airflow service runs, this target deploys a fresh version of teh sem-covid repos
 deploy-to-airflow: | build-externals-extra get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Deploying into running Airflow ..."
-	@ cd airflow2/dags && rm -rf airflow2/dags
+	@ rm -rf airflow2/dags/*
 	@ cp -rf airflow2/sem-covid/sem_covid airflow2/dags
 	@ cp -rf airflow2/sem-covid/resources airflow2/dags
 
