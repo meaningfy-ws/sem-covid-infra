@@ -190,6 +190,19 @@ stop-airflow2:
 	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
 	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
 
+start-lang-model-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
+	@ echo "$(BUILD_PRINT)Starting the lang-model-explorer services"
+	@ cp -rf airflow2/sem-covid lang-model-explorer
+	@ cp .env lang-model-explorer
+	@ docker container prune -f
+	@ docker image rm lang-model-explorer_lang-model-explorer || true
+	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env up -d --force-recreate
+
+stop-lang-model-explorer:
+	@ echo "$(BUILD_PRINT)Stopping the lang-model-explorer services"
+	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env down
+
 # when the Airflow service runs, this target deploys a fresh version of teh sem-covid repos
 deploy-to-airflow: | build-externals-extra get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Deploying into running Airflow ..."
