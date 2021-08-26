@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  lang-model-explorer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${LANG_MODEL_EXPLORER_PORT:-8501}:8501
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${VAULT_TOKEN}
+    networks:
+      - elk
+
+networks:
+  elk:
+    external:
+      name: elk
