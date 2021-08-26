@@ -1,13 +1,15 @@
 version: '3'
 
 services:
-  streamlit:
-    container_name:  ${STREAMLIT_HOST_NAME}
+  lang-model-explorer:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - ${STREAMLIT_PORT:-8501}:8501
+      - ${LANG_MODEL_EXPLORER_PORT:-8501}:8501
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${VAULT_TOKEN}
     networks:
       - elk
 
