@@ -1,0 +1,23 @@
+streamlit
+pandas
+networkx
+numpy
+d3graph
+python-dotenv
+elasticsearch
+minio
+es-pandas
+hvac
+py-singleton
+progressbar2
+SPARQLWrapper
+
+# ml libararies
+spacy
+gensim
+scikit-learn
+python-Levenshtein
+faiss-cpu
+transformers
+tensorflow-hub
+torch
