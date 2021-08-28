@@ -21,3 +21,4 @@ faiss-cpu
 transformers
 tensorflow-hub
 torch
+more-itertools
