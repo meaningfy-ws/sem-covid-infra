@@ -209,8 +209,8 @@ start-semantic-search-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ cp .env semantic-search
 	@ docker container prune -f
 	@ docker image rm semantic-search_semantic-search || true
-	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env build --no-cache --force-rm --service--ports
+	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env up -d --force-recreate --service--ports
 
 stop-semantic-search:
 	@ echo "$(BUILD_PRINT)Stopping the semantic-search services"
