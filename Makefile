@@ -203,6 +203,19 @@ stop-lang-model-explorer:
 	@ echo "$(BUILD_PRINT)Stopping the lang-model-explorer services"
 	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env down
 
+start-topic-modeling-build: get-sem-covid-repository vault_secret_to_dotenv
+	@ echo "$(BUILD_PRINT)Starting the topic-modeling services"
+	@ cp -rf airflow2/sem-covid topic-modeling
+	@ cp .env topic-modeling
+	@ docker container prune -f
+	@ docker image rm topic-modeling_topic-modeling || true
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env build --no-cache --force-rm
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env up -d --force-recreate
+
+stop-topic-modeling:
+	@ echo "$(BUILD_PRINT)Stopping the topic-modeling services"
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env down
+
 start-semantic-search-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the semantic-search services"
 	@ cp -rf airflow2/sem-covid semantic-search

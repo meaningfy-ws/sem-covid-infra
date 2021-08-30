@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  topic-modeling:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${TOPIC_MODELING_PORT:-8502}:8501
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${VAULT_TOKEN}
+    networks:
+      - elk
+
+networks:
+  elk:
+    external:
+      name: elk
