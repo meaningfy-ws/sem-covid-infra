@@ -209,12 +209,12 @@ start-topic-modeling-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ cp .env topic-modeling
 	@ docker container prune -f
 	@ docker image rm topic-modeling_topic-modeling || true
-	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env build --no-cache --force-rm
-	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env up -d --force-recreate
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env up -d --force-recreate
 
 stop-topic-modeling:
 	@ echo "$(BUILD_PRINT)Stopping the topic-modeling services"
-	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env down
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env down
 
 start-semantic-search-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the semantic-search services"
