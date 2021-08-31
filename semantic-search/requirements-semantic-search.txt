@@ -1,7 +1,7 @@
 streamlit
 pandas
 networkx
-numpy==1.19.2
+numpy~=1.19.5
 d3graph
 python-dotenv
 elasticsearch
@@ -14,7 +14,7 @@ SPARQLWrapper
 
 # ml libararies
 spacy
-gensim
+gensim==4.0.1
 scikit-learn
 python-Levenshtein
 faiss-cpu
