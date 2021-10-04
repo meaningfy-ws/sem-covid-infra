@@ -16,3 +16,4 @@ gensim
 scikit-learn
 python-Levenshtein
 more-itertools
+mlflow
