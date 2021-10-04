@@ -1,0 +1,18 @@
+streamlit
+pandas
+numpy
+python-dotenv
+elasticsearch
+minio
+es-pandas
+hvac
+py-singleton
+progressbar2
+SPARQLWrapper
+
+# ml libararies
+spacy
+gensim
+scikit-learn
+python-Levenshtein
+more-itertools

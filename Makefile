@@ -203,6 +203,19 @@ stop-lang-model-explorer:
 	@ echo "$(BUILD_PRINT)Stopping the lang-model-explorer services"
 	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env down
 
+start-semantic-similarity-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
+	@ echo "$(BUILD_PRINT)Starting the semantic-similarity-explorer services"
+	@ cp -rf airflow2/sem-covid semantic-similarity-explorer
+	@ cp .env semantic-similarity-explorer
+	@ docker container prune -f
+	@ docker image rm semantic-similarity-explorer_semantic-similarity-explorer || true
+	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file ../.env up -d --force-recreate
+
+stop-semantic-similarity-explorer:
+	@ echo "$(BUILD_PRINT)Stopping the semantic-similarity-explorer services"
+	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file ../.env down
+
 start-topic-modeling-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the topic-modeling services"
 	@ cp -rf airflow2/sem-covid topic-modeling

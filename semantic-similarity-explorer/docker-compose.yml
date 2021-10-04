@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  semantic-similarity-explorer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8505:8501"
+    environment:
+      - VAULT_ADDR=${VAULT_ADDR}
+      - VAULT_TOKEN=${VAULT_TOKEN}
+    networks:
+      - elk
+
+networks:
+  elk:
+    external:
+      name: elk
