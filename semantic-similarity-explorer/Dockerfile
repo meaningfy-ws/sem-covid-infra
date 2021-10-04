@@ -1,7 +1,7 @@
 
 FROM python:3.8
 COPY sem-covid/ /opt
-COPY requirements-topic-modeling.txt /opt
+COPY requirements-semantic-similarity.txt /opt
 COPY .env /opt
 
 
