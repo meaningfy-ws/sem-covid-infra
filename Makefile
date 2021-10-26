@@ -229,6 +229,19 @@ stop-topic-modeling:
 	@ echo "$(BUILD_PRINT)Stopping the topic-modeling services"
 	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env down
 
+start-topic-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
+	@ echo "$(BUILD_PRINT)Starting the topic-explorer services"
+	@ cp -rf airflow2/sem-covid topic-explorer
+	@ cp .env topic-explorer
+	@ docker container prune -f
+	@ docker image rm topic-explorer_topic-explorer || true
+	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env build --no-cache --force-rm
+	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env up -d --force-recreate
+
+stop-topic-explorer:
+	@ echo "$(BUILD_PRINT)Stopping the topic-explorer services"
+	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env down
+
 start-semantic-search-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the semantic-search services"
 	@ cp -rf airflow2/sem-covid semantic-search
