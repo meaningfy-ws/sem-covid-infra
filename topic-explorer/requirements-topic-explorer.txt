@@ -21,7 +21,7 @@ async-generator==1.10
 async-timeout==3.0.1
 attrs==20.3.0
 Automat==0.8.0
-Babel==2.9.0
+Babel==2.9.1
 backcall==0.2.0
 backports.zoneinfo==0.2.1
 banal==1.0.6
