@@ -26,3 +26,4 @@ bert-extractive-summarizer
 more_itertools
 mlflow
 plotly
+umap-learn
