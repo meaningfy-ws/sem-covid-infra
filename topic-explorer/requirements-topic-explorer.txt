@@ -46,7 +46,6 @@ chardet==3.0.4
 clean-text==0.3.0
 click==7.1.1
 clickclick==20.10.2
-cloud-init==20.4
 cloudpickle==1.6.0
 colorama==0.4.3
 colorful==0.5.4
