@@ -6,7 +6,7 @@ alabaster==0.7.12
 alembic==1.4.1
 altair==4.1.0
 anyio==2.2.0
-apache-airflow==2.1.0
+apache-airflow==2.1.2
 apache-airflow-providers-ftp==1.0.1
 apache-airflow-providers-http==1.1.1
 apache-airflow-providers-imap==1.0.1
