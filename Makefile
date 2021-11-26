@@ -242,19 +242,6 @@ stop-topic-explorer:
 	@ echo "$(BUILD_PRINT)Stopping the topic-explorer services"
 	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env down
 
-start-semantic-search-build: get-sem-covid-repository vault_secret_to_dotenv
-	@ echo "$(BUILD_PRINT)Starting the semantic-search services"
-	@ cp -rf airflow2/sem-covid semantic-search
-	@ cp .env semantic-search
-	@ docker container prune -f
-	@ docker image rm semantic-search_semantic-search || true
-	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env up -d --force-recreate
-
-stop-semantic-search:
-	@ echo "$(BUILD_PRINT)Stopping the semantic-search services"
-	@ docker-compose --file ./semantic-search/docker-compose.yml --env-file ../.env down
-
 # when the Airflow service runs, this target deploys a fresh version of teh sem-covid repos
 deploy-to-airflow: | build-externals-extra get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Deploying into running Airflow ..."
