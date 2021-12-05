@@ -263,7 +263,7 @@ start-rml-mapper-build:
 	@ echo "$(BUILD_PRINT)Starting the rml-mapper services"
 	@ rm -rf ./rml-mapper/build
 	@ mkdir -p ./rml-mapper/build
-	@ git -C ./rml-mapper/build clone https://github.com/RMLio/rmlmapper-webapi-js.git
+	@ git clone https://github.com/RMLio/rmlmapper-webapi-js.git ./rml-mapper/build
 	@ docker container prune -f
 	@ docker-compose --file ./rml-mapper/docker-compose.yaml up -d --force-recreate
 
