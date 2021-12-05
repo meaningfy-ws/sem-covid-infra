@@ -4,10 +4,6 @@ version: '3'
 services:
     rml-mapper:
       container_name: rml_mapper
-      build: .
-      command: git -C /build clone https://github.com/RMLio/rmlmapper-webapi-js.git#master
+      build: https://github.com/RMLio/rmlmapper-webapi-js.git
       ports:
         - '4000:4000'
-      volumes:
-      - ./build:/build
-      
