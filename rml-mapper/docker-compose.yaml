@@ -4,5 +4,6 @@ version: '3'
 services:
     rml-mapper:
       build: https://github.com/RMLio/rmlmapper-webapi-js.git#master
+      image: rml_mapper
       ports:
         - '4000:4000'
