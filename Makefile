@@ -261,6 +261,7 @@ import-kibana-dashboards:
 
 start-rml-mapper-build:
 	@ echo "$(BUILD_PRINT)Starting the rml-mapper services"
+	@ rm -rf ./rml-mapper/build
 	@ mkdir -p ./rml-mapper/build
 	@ git -C ./rml-mapper/build clone https://github.com/RMLio/rmlmapper-webapi-js.git
 	@ docker container prune -f
@@ -268,6 +269,5 @@ start-rml-mapper-build:
 
 stop-rml-mapper:
 	@ echo "$(BUILD_PRINT)Stopping the rml-mapper services"
-	@  rm -rf ./rml-mapper/build
 	@ docker-compose --file ./rml-mapper/docker-compose.yaml down
 
