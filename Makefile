@@ -257,3 +257,14 @@ export-kibana-dashboards:
 import-kibana-dashboards:
 	@ echo "$(BUILD_PRINT)Importing Kibana dashboards..."
 	@ ./resources/scripts/import-kibana-dashboards.sh ../kibana_dashboards
+
+
+start-rml-mapper-build:
+	@ echo "$(BUILD_PRINT)Starting the rml-mapper services"
+	@ docker container prune -f
+	@ docker-compose --file ./rml-mapper/docker-compose.yaml up -d --force-recreate
+
+stop-rml-mapper:
+	@ echo "$(BUILD_PRINT)Stopping the rml-mapper services"
+	@ docker-compose --file ./rml-mapper/docker-compose.yaml down
+
