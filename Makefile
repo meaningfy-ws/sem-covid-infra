@@ -13,11 +13,11 @@ build-externals-extra:
 
 start-elk: build-externals
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
-	@ docker-compose --file ./elk/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./elk/docker-compose.yml --env-file .env up --build -d
 
 stop-elk:
 	@ echo "$(BUILD_PRINT)Stopping the ELK and other services"
-	@ docker-compose --file ./elk/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./elk/docker-compose.yml --env-file .env down
 
 start-storage: build-externals
 	@ echo "$(BUILD_PRINT)Starting the File Storage services"
@@ -177,8 +177,8 @@ start-airflow2-build: build-externals get-sem-covid-repository
 	@ docker stop `docker ps -q --filter ancestor=airflow2_meaningfy` || true
 	@ docker container prune -f
 	@ docker image rm airflow2_meaningfy || true
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env build --no-cache --force-rm
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env up -d --force-recreate
 	@ rm airflow2/requirements-airflow.txt || true
 
 start-airflow2: build-externals

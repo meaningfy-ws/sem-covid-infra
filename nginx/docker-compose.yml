@@ -2,6 +2,7 @@ version: '3.1'
 services:
     proxy:
         build: .
+        ports:
             - "80:80"
         networks:
             - elk
