@@ -273,7 +273,7 @@ stop-rml-mapper:
 
 start-fuseki:
 	@ echo "$(BUILD_PRINT)Starting the fuseki"
-	@ docker-compose --file ./fuseki/docker-compose.yml --env-file ./fuseki/.env.test up
+	@ docker-compose --file ./fuseki/docker-compose.yml --env-file ./fuseki/.env.test up -d
 
 stop-fuseki:
 	@ echo "$(BUILD_PRINT)Stoping the fuseki"
