@@ -1,11 +1,11 @@
 version: '3'
-  services:
-    fuseki:
-      container_image: fuseki
-      iamge: stain/jena-fuseki
-      ports:
-        - "8595:80"
-      volumes:
-        - ./:/fuseki
-      environment:
-        - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+services:
+  fuseki:
+    container_name: fuseki
+    image: stain/jena-fuseki
+    ports:
+      - "8595:80"
+    volumes:
+      - ./:/fuseki
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
