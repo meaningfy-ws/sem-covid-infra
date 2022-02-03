@@ -7,7 +7,7 @@ minio
 es-pandas
 hvac
 py-singleton
-progressbar2
+progressbar2==3.55.0
 SPARQLWrapper
 
 # ml libararies

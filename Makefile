@@ -13,31 +13,31 @@ build-externals-extra:
 
 start-elk: build-externals
 	@ echo "$(BUILD_PRINT)Starting the ELK and other services"
-	@ docker-compose --file ./elk/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./elk/docker-compose.yml --env-file .env up -d
 
 stop-elk:
 	@ echo "$(BUILD_PRINT)Stopping the ELK and other services"
-	@ docker-compose --file ./elk/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./elk/docker-compose.yml --env-file .env down
 
 start-storage: build-externals
 	@ echo "$(BUILD_PRINT)Starting the File Storage services"
-	@ docker-compose --file ./storage/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./storage/docker-compose.yml --env-file .env up -d
 
 stop-storage:
 	@ echo "$(BUILD_PRINT)Stopping the File Storage services"
-	@ docker-compose --file ./storage/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./storage/docker-compose.yml --env-file .env down
 
 start-mlflow: start-storage
 	@ echo "$(BUILD_PRINT)Starting the MLFlow services"
-	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./mlflow/docker-compose.yml --env-file .env up -d
 
 stop-mlflow:
 	@ echo "$(BUILD_PRINT)Stopping the MLFlow services"
-	@ docker-compose --file ./mlflow/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./mlflow/docker-compose.yml --env-file .env down
 
 start-notebook: build-externals
 	@ echo "$(BUILD_PRINT)Starting the Jupyter Notebook services"
-	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./notebook/docker-compose.yml --env-file .env up -d
 
 start-notebook-build: build-externals get-sem-covid-repository
 	@ echo "$(BUILD_PRINT)Rebuildig the image and then starting the Jupyter Notebook services"
@@ -52,7 +52,7 @@ start-notebook-build: build-externals get-sem-covid-repository
 
 stop-notebook:
 	@ echo "$(BUILD_PRINT)Stopping the Jupyter Notebook services"
-	@ docker-compose --file ./notebook/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./notebook/docker-compose.yml --env-file .env down
 
 start-vault: build-externals-extra
 	@ echo "$(BUILD_PRINT)Starting the Vault services"
@@ -64,11 +64,11 @@ stop-vault:
 
 start-tika:
 	@ echo "$(BUILD_PRINT)Starting the Apache Tika services"
-	@ docker-compose --file ./tika/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./tika/docker-compose.yml --env-file .env up -d
 
 stop-tika:
 	@ echo "$(BUILD_PRINT)Stopping the Apache Tika services"
-	@ docker-compose --file ./tika/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./tika/docker-compose.yml --env-file .env down
 
 start-services-all: | build-externals start-storage start-elk start-mlflow start-airflow2 start-tika start-notebook start-vault import-kibana-dashboards
 
@@ -184,11 +184,11 @@ start-airflow2-build: build-externals get-sem-covid-repository
 start-airflow2: build-externals
 	@ echo "$(BUILD_PRINT)Starting the AirFlow services"
 	@ echo "$(BUILD_PRINT)Warning: the Airflow shared folders, mounted as volumes, need R/W permissions"
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env up -d
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env up -d
 
 stop-airflow2:
 	@ echo "$(BUILD_PRINT)Stopping the AirFlow services"
-	@ docker-compose --file ./airflow2/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./airflow2/docker-compose.yml --env-file .env down
 
 start-lang-model-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the lang-model-explorer services"
@@ -196,12 +196,12 @@ start-lang-model-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ cp .env lang-model-explorer
 	@ docker container prune -f
 	@ docker image rm lang-model-explorer_lang-model-explorer || true
-	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file .env build --no-cache --force-rm
+	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file .env up -d --force-recreate
 
 stop-lang-model-explorer:
 	@ echo "$(BUILD_PRINT)Stopping the lang-model-explorer services"
-	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./lang-model-explorer/docker-compose.yml --env-file .env down
 
 start-semantic-similarity-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the semantic-similarity-explorer services"
@@ -209,12 +209,12 @@ start-semantic-similarity-explorer-build: get-sem-covid-repository vault_secret_
 	@ cp .env semantic-similarity-explorer
 	@ docker container prune -f
 	@ docker image rm semantic-similarity-explorer_semantic-similarity-explorer || true
-	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file .env build --no-cache --force-rm
+	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file .env up -d --force-recreate
 
 stop-semantic-similarity-explorer:
 	@ echo "$(BUILD_PRINT)Stopping the semantic-similarity-explorer services"
-	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./semantic-similarity-explorer/docker-compose.yml --env-file .env down
 
 start-topic-modeling-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the topic-modeling services"
@@ -222,12 +222,12 @@ start-topic-modeling-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ cp .env topic-modeling
 	@ docker container prune -f
 	@ docker image rm topic-modeling_topic-modeling || true
-	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env build --no-cache --force-rm
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env up -d --force-recreate
 
 stop-topic-modeling:
 	@ echo "$(BUILD_PRINT)Stopping the topic-modeling services"
-	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./topic-modeling/docker-compose.yml --env-file .env down
 
 start-topic-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ echo "$(BUILD_PRINT)Starting the topic-explorer services"
@@ -235,12 +235,12 @@ start-topic-explorer-build: get-sem-covid-repository vault_secret_to_dotenv
 	@ cp .env topic-explorer
 	@ docker container prune -f
 	@ docker image rm topic-explorer_topic-explorer || true
-	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env build --no-cache --force-rm
-	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env up -d --force-recreate
+	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file .env build --no-cache --force-rm
+	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file .env up -d --force-recreate
 
 stop-topic-explorer:
 	@ echo "$(BUILD_PRINT)Stopping the topic-explorer services"
-	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file ../.env down
+	@ docker-compose --file ./topic-explorer/docker-compose.yml --env-file .env down
 
 # when the Airflow service runs, this target deploys a fresh version of teh sem-covid repos
 deploy-to-airflow: | build-externals-extra get-sem-covid-repository
