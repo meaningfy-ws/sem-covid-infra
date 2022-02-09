@@ -1,5 +1,5 @@
 
-FROM python:3.8
+FROM python:3.8.11
 COPY sem-covid/ /opt
 COPY requirements-topic-explorer.txt /opt
 COPY .env /opt
