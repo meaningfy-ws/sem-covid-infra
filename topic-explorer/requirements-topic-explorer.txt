@@ -11,7 +11,7 @@ SPARQLWrapper==1.8.5
 py-singleton==1.0.0
 mlflow==1.21.0
 bertopic==0.9.3
-numpy==1.20.0
+numpy==1.22.0
 pynndescent==0.5.4
 numba==0.53.1
 more-itertools
