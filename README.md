@@ -1,5 +1,7 @@
 # Sem-covid infrastructure stack
 
+> **Infrastructure change (2026-10-17).** The Meaningfy HashiCorp Vault (`vault.meaningfy.ws`) is being retired, and the services on its host (srv) have been stopped. Secret values now live in the company Vaultwarden; CI/CD reads them from GitHub Secrets and Variables (per GitHub Environment); hosted deployments live in `meaningfy-ws/infrastructure-stacks`. Do not add new Vault reads. What this repo has to change: https://github.com/meaningfy-ws/sem-covid-infra/issues/69
+
 A docker-compose suite of service configurations representing the Meaningfy infrastructure stack for Machine Learning
 and Data Driven applications.
 
